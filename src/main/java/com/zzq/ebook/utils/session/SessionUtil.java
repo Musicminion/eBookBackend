@@ -18,13 +18,14 @@ public class SessionUtil {
 //            HttpSession session = request.getSession(false);
 //
 //            if(session != null) {
-//                Integer userType = (Integer) session.getAttribute(Constant.USER_TYPE);
-//                return userType != null && userType >= 0;
+//                Integer userType = (Integer) session.getAttribute(constant.PRIVILEGE);
+//                return userType != null && userType <= 2;
 //            }
 //        }
 //        return false;
 //    }
 
+    // Session方式检查用户的权限，返回json对象，包括的是用户名和权限信息。
     public static JSONObject getAuth(){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         // Session
@@ -34,7 +35,6 @@ public class SessionUtil {
 
             if(session != null) {
                 JSONObject ret = new JSONObject();
-                // ret.put(constant.USER_ID, (Integer)session.getAttribute(constant.USER_ID));
                 ret.put(constant.USERNAME, (String)session.getAttribute(constant.USERNAME));
                 ret.put(constant.PRIVILEGE, (Integer)session.getAttribute(constant.PRIVILEGE));
                 return ret;

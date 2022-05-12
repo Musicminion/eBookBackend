@@ -16,6 +16,18 @@ import com.zzq.ebook.constant.constant;
 
 import java.util.Map;
 
+
+//      接口名称                                接口说明：
+//      /login           登录接口，接收POST请求，参数必须要包括username password，返回用户的完整信息。
+//      /logout          登出接口，接收POST请求，参数无，返回是否登出成功，
+//      /refreshToken    刷新令牌，接收POST请求，参数无，返回当前会话的用户名+请求信息。
+
+//      /userinfo        用户信息接口，接收POST请求，参数包括用户名username，接口返回用户不包括密码的完整数据库表json字段对象，
+//                       会检查当前的回话，判断用户信息，接口用于获取用户的个人信息、权限等
+
+
+
+
 @RestController
 public class loginControl {
 

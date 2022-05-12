@@ -14,22 +14,16 @@ public class MsgUtil {
     public static final int ERROR = -1;
     public static final int LOGIN_USER_ERROR = -100;
     public static final int NOT_LOGGED_IN_ERROR = -101;
-
     public static final String SUCCESS_MSG = "成功！";
     public static final String ERROR_MSG = "错误！";
-
     public static final String LOGIN_SUCCESS_MSG = "登录成功！";
     public static final String LOGIN_FAIL_ACCOUNT_FORBIDDEN = "账户被禁用，请联系管理员";
     public static final String LOGOUT_SUCCESS_MSG = "退出登录成功！";
     public static final String LOGOUT_ERR_MSG = "退出登录异常！";
-
-
-
-
-
     public static final String LOGIN_USER_ERROR_MSG = "用户名或密码错误，请重新输入！";
     public static final String NOT_LOGGED_IN_ERROR_MSG = "登录失效，请重新登录！";
 
+    public static final String QUERY_BookID_NOT_EXIST = "本书不存在，请选择其他图书";
 
 
     public static Msg makeMsg(MsgCode code, JSONObject data){
