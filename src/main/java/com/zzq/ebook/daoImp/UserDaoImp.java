@@ -16,5 +16,9 @@ public class UserDaoImp implements UserDao {
     public User checkUser(String username, String password){
         return userRepository.checkUser(username,password);
     }
+    @Override
+    public User getUserByusername(String username){
+        return userRepository.getOne(username);
+    }
 
 }

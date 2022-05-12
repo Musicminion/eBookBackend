@@ -7,4 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public interface UserDao {
 
     User checkUser(String username, String password);
+
+    User getUserByusername(String username);
 }

@@ -22,6 +22,8 @@ public class User {
     private String name;
     private String email;
     private String useraddress;
+
+    private String telephone;
     private int forbidlogin;
 
     public String getUsername(){
@@ -44,6 +46,12 @@ public class User {
         return forbidlogin;
     }
 
+    public String getTelephone() {
+        return telephone;
+    }
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
     public void setEmail(String email) {
         this.email = email;
     }

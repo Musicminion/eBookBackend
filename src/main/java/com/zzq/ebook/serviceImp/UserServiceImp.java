@@ -18,4 +18,9 @@ public class UserServiceImp implements UserService {
         return userDao.checkUser(username,password);
     }
 
+    @Override
+    public User getUserByusername(String username){
+        return userDao.getUserByusername(username);
+    }
+
 }

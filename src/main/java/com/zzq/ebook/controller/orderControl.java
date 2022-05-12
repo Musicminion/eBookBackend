@@ -19,7 +19,6 @@ public class orderControl {
     @RequestMapping("/order/buyOneImmediately")
     public Msg buyOneImmediately(@RequestBody Map<String, String> params){
 
-
         return null;
     }
 }
