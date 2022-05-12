@@ -11,8 +11,4 @@ public class constant {
     public static final String USERADDRESS = "useraddress";
     public static final String FORBIDLOGIN = "forbidlogin";
 
-
-
-
-
 }

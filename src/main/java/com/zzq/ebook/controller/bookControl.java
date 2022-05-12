@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-public class bookController {
+public class bookControl {
     @Autowired
     private BookService bookService;
 

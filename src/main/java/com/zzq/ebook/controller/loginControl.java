@@ -26,8 +26,6 @@ import java.util.Map;
 //                       会检查当前的回话，判断用户信息，接口用于获取用户的个人信息、权限等
 
 
-
-
 @RestController
 public class loginControl {
 
