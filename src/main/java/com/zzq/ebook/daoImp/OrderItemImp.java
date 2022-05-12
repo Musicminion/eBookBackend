@@ -1,0 +1,25 @@
+package com.zzq.ebook.daoImp;
+
+import com.zzq.ebook.constant.constant;
+import com.zzq.ebook.dao.OrderItemDao;
+import com.zzq.ebook.entity.OrderItem;
+import com.zzq.ebook.repository.OrderItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+
+@Repository
+public class OrderItemImp implements OrderItemDao {
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    public OrderItem addOneOrderItem(OrderItem newOrder){
+
+        return orderItemRepository.save(newOrder);
+    }
+
+}

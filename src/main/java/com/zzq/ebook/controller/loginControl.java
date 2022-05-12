@@ -1,6 +1,8 @@
 package com.zzq.ebook.controller;
 
 import com.zzq.ebook.entity.User;
+import com.zzq.ebook.service.BookService;
+import com.zzq.ebook.service.OrderService;
 import com.zzq.ebook.service.UserService;
 import com.zzq.ebook.utils.session.SessionUtil;
 import net.sf.json.JSONObject;
@@ -32,6 +34,13 @@ public class loginControl {
     @Autowired
     private UserService userService;
 
+
+    // ##############  下面的代码是测试代码区域  ##############
+    //    @Autowired
+    //    private OrderService orderService;
+    // ##############  ###################  ##############
+
+
     @RequestMapping("/login")
     public Msg function(@RequestBody Map<String, String> params){
 
@@ -56,6 +65,11 @@ public class loginControl {
 
             JSONObject data = JSONObject.fromObject(user);
             data.remove(constant.PASSWORD);
+
+            // ##############  下面的代码是测试代码区域  ##############
+            // orderService.addOneOrderItemToChart(username,1,12);
+            // ##############  ###################  ##############
+
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
         }
 
@@ -72,8 +86,8 @@ public class loginControl {
         return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.LOGOUT_ERR_MSG);
     }
 
-    @RequestMapping("/refreshToken")
-    public Msg refreshToken(){
+    @RequestMapping("/checkSession")
+    public Msg checkSession(){
         JSONObject auth = SessionUtil.getAuth();
 
         if(auth == null){

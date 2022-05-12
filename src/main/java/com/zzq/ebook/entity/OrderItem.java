@@ -3,10 +3,10 @@ package com.zzq.ebook.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
+
 
 @Entity
 @Table(name = "orderitem")
@@ -20,7 +20,9 @@ public class OrderItem {
     private int orderID;
     private int bookID;
     private int buynum;
-    private Timestamp createTime;
+
+
+    private Timestamp create_Itemtime;
 
     public int getItemID() {return itemID;}
     public int getBookID() {return bookID;}
@@ -34,8 +36,9 @@ public class OrderItem {
     public String getBelonguser() {
         return belonguser;
     }
-    public Timestamp getCreateTime() {
-        return createTime;
+
+    public Timestamp getCreate_Itemtime() {
+        return create_Itemtime;
     }
 
     public void setBelonguser(String belonguser) {
@@ -47,8 +50,9 @@ public class OrderItem {
     public void setBuynum(int buynum) {
         this.buynum = buynum;
     }
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
+
+    public void setCreate_Itemtime(Timestamp createItemtime) {
+        this.create_Itemtime = createItemtime;
     }
     public void setItemID(int itemID) {
         this.itemID = itemID;

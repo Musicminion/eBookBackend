@@ -72,9 +72,6 @@ public class Book {
     public void setDisplaytitle(String displaytitle) {
         this.displaytitle = displaytitle;
     }
-    public void setID(int ID) {
-        this.ID = ID;
-    }
     public void setImgtitle(String imgtitle) {
         this.imgtitle = imgtitle;
     }
@@ -93,4 +90,6 @@ public class Book {
     public void setSellnumber(int sellnumber) {
         this.sellnumber = sellnumber;
     }
+
+    //    public void setID(int ID) { this.ID = ID; }
 }
