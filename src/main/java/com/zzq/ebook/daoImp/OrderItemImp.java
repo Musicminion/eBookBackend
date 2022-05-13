@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 
 @Repository
@@ -20,6 +21,10 @@ public class OrderItemImp implements OrderItemDao {
     public OrderItem addOneOrderItem(OrderItem newOrder){
 
         return orderItemRepository.save(newOrder);
+    }
+
+    public List<OrderItem> queryOneUserShopCart(String username){
+        return orderItemRepository.findUserShopCartItem(username);
     }
 
 }

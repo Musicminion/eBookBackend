@@ -20,9 +20,9 @@ public class OrderItem {
     private int orderID;
     private int bookID;
     private int buynum;
-
-
+    private double payprice;
     private Timestamp create_Itemtime;
+    private String comment;
 
     public int getItemID() {return itemID;}
     public int getBookID() {return bookID;}
@@ -36,11 +36,20 @@ public class OrderItem {
     public String getBelonguser() {
         return belonguser;
     }
-
+    public double getPayprice() {
+        return payprice;
+    }
     public Timestamp getCreate_Itemtime() {
         return create_Itemtime;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setPayprice(double payprice) {
+        this.payprice = payprice;
+    }
     public void setBelonguser(String belonguser) {
         this.belonguser = belonguser;
     }
@@ -62,5 +71,9 @@ public class OrderItem {
     }
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
