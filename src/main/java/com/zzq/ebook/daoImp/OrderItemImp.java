@@ -3,6 +3,7 @@ package com.zzq.ebook.daoImp;
 import com.zzq.ebook.constant.constant;
 import com.zzq.ebook.dao.OrderItemDao;
 import com.zzq.ebook.entity.OrderItem;
+import com.zzq.ebook.entity.User;
 import com.zzq.ebook.repository.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,12 @@ public class OrderItemImp implements OrderItemDao {
         return orderItemRepository.findUserShopCartItem(username);
     }
 
+    public OrderItem checkUserOrderItemByID(String username, int bookID){
+//        return null;
+        return orderItemRepository.findUserShopCartItemOfBook(username,bookID);
+    }
+
+    public OrderItem saveOneOrderItem(OrderItem saveObj){
+        return orderItemRepository.save(saveObj);
+    }
 }

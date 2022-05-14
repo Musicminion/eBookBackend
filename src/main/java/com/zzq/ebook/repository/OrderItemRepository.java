@@ -13,7 +13,11 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Integer> {
 //    @Query(value = "from OrderItem where status =?1 and belonguser = :belonguser and bookID = :bookID")
 //    User checkIfAddBefore(@Param("belonguser") String belonguser, @Param("bookID") int bookID);
 
+    // 已知：用户
     @Query(value = "from OrderItem where belonguser = :belonguser and status =0")
     List<OrderItem> findUserShopCartItem(@Param("belonguser") String belonguser);
+
+    @Query(value = "from OrderItem where belonguser = :belonguser and bookID = :bookID and status =0")
+    OrderItem findUserShopCartItemOfBook(@Param("belonguser") String belonguser,@Param("bookID") int bookID);
 
 }

@@ -27,8 +27,43 @@ public class orderControl {
     private OrderService orderService;
     @RequestMapping("/order/addToChart")
     public Msg addToChart(@RequestBody Map<String, String> params){
-        return null;
+        String username = params.get(constant.USERNAME);
+
+        // 拒绝非法的用户添加购物车到他人用户
+        JSONObject auth = SessionUtil.getAuth();
+        if(!Objects.equals((String) auth.get(constant.USERNAME), username)){
+
+            System.out.println(username);
+            System.out.println((String) auth.get(constant.USERNAME));
+            return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
+        }
+
+        String bookID = params.get(constant.BOOKID);
+        String buynumStr = params.get(constant.SINGLE_ITEM_BUYNUM);
+
+        int IDnum = Integer.parseInt(bookID);
+        int buynum = Integer.parseInt(buynumStr);
+
+        System.out.println(username);
+        System.out.println(IDnum);
+        System.out.println(buynum);
+
+        OrderItem resultItem = orderService.addOneOrderItemToChart(username,IDnum,buynum);
+
+        if(resultItem == null)
+            return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.ADD_TOO_MUCH_TO_SHOPCART);
+
+        return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.ADD_TO_SHOPCART_SUCCESS);
     }
+
+    @RequestMapping("/refreshShopCartItem")
+    public Msg refreshShopCartItem(@RequestBody Map<String, String> params){
+
+        return null;
+
+    }
+
+
 
     @RequestMapping("/order/queryMyChart")
     public List<OrderItem> queryChart(@RequestBody Map<String, String> params){
@@ -39,8 +74,11 @@ public class orderControl {
             return null;
         }
 
-        return orderService.findAllOrderItemInChart(queryUser);
+        return orderService.findAllOrderItemInCart(queryUser);
     }
+
+
+
 
 
     @RequestMapping("/order/buyOneImmediately")
@@ -49,8 +87,5 @@ public class orderControl {
 
         return null;
     }
-
-
-
 
 }

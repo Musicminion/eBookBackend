@@ -23,6 +23,9 @@ public class MsgUtil {
     public static final String LOGIN_USER_ERROR_MSG = "用户名或密码错误，请重新输入！";
     public static final String NOT_LOGGED_IN_ERROR_MSG = "登录失效，请重新登录！";
 
+    public static final String ADD_TO_SHOPCART_SUCCESS = "添加到购物车成功！";
+    public static final String ADD_TOO_MUCH_TO_SHOPCART = "请求加入的购物车数量过多，超出容量";
+
     public static final String QUERY_BookID_NOT_EXIST = "本书不存在，请选择其他图书";
 
 

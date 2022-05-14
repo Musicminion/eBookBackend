@@ -7,5 +7,8 @@ import java.util.List;
 public interface OrderService {
     public OrderItem addOneOrderItemToChart(String username, int bookID,int buynum);
 
-    public List<OrderItem> findAllOrderItemInChart(String username);
+    public List<OrderItem> findAllOrderItemInCart(String username);
+
+
+
 }
