@@ -103,6 +103,9 @@ public class orderControl {
 
         int itemNum = (params.size() - 6) / 2 ;
 
+        if(itemNum <= 0)
+            return null;
+
         String orderFrom = params.get("orderFrom");
         String username = params.get(constant.USERNAME);
         String receivename = params.get("receivename");

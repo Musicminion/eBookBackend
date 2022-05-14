@@ -97,12 +97,14 @@ public class OrderServiceImp implements OrderService {
         newOrder.setContactphone(phonenumber);
         newOrder.setDestination(receiveaddress);
         newOrder.setReceivername(receivename);
+        newOrder.setPostalcode(postcode);
 
         Timestamp timenow = new Timestamp(System.currentTimeMillis());
         newOrder.setCreate_time(timenow);
 
         int orderid = orderDao.saveOneOrder(newOrder).getOrderID();
 
+        System.out.println(orderid);
 
         for(int i=0; i<size; i++){
             OrderItem oneitem = orderItemDao.checkUserOrderItemByID(username,bookIDGroup[i]);
@@ -115,6 +117,8 @@ public class OrderServiceImp implements OrderService {
             Book book = bookDao.getOneBookByID(bookIDGroup[i]);
             int reaminNum = book.getInventory() - bookNumGroup[i];
             book.setInventory(reaminNum);
+            int newSellnum = book.getSellnumber() + bookNumGroup[i];
+            book.setSellnumber(newSellnum);
             bookDao.savaOneBook(book);
         }
         return 1;
