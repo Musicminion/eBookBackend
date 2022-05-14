@@ -16,4 +16,10 @@ public class BookDaoImp implements BookDao {
     public Book getOneBookByID(Integer id){
         return bookRepository.getOne(id);
     }
+
+    @Override
+    public Book savaOneBook(Book newoneBook){
+        return bookRepository.save(newoneBook);
+    }
+
 }

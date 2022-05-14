@@ -2,9 +2,12 @@ package com.zzq.ebook.serviceImp;
 
 import com.zzq.ebook.constant.constant;
 import com.zzq.ebook.dao.BookDao;
+import com.zzq.ebook.dao.OrderDao;
 import com.zzq.ebook.dao.OrderItemDao;
 import com.zzq.ebook.entity.Book;
+import com.zzq.ebook.entity.Order;
 import com.zzq.ebook.entity.OrderItem;
+import com.zzq.ebook.repository.BookRepository;
 import com.zzq.ebook.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,12 @@ public class OrderServiceImp implements OrderService {
 
     @Autowired
     private BookDao bookDao;
+
+    @Autowired
+    private OrderDao orderDao;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     public OrderItem addOneOrderItemToChart(String username, int bookID, int buynum){
 
@@ -72,7 +81,9 @@ public class OrderServiceImp implements OrderService {
         Book book = bookDao.getOneBookByID(bookID);
         if(refreshedBuynum > book.getInventory())
             return -2;
+
         tmpitem.setBuynum(refreshedBuynum);
+        tmpitem.setPayprice(book.getPrice()*refreshedBuynum);
 
         orderItemDao.saveOneOrderItem(tmpitem);
         return 0;
@@ -81,13 +92,30 @@ public class OrderServiceImp implements OrderService {
 
     public int orderMakeFromShopCart(int [] bookIDGroup, int [] bookNumGroup, String username,
             String receivename, String postcode, String phonenumber, String receiveaddress, int size){
+        Order newOrder = new Order();
+        newOrder.setBelonguser(username);
+        newOrder.setContactphone(phonenumber);
+        newOrder.setDestination(receiveaddress);
+        newOrder.setReceivername(receivename);
+
+        Timestamp timenow = new Timestamp(System.currentTimeMillis());
+        newOrder.setCreate_time(timenow);
+
+        int orderid = orderDao.saveOneOrder(newOrder).getOrderID();
 
 
         for(int i=0; i<size; i++){
+            OrderItem oneitem = orderItemDao.checkUserOrderItemByID(username,bookIDGroup[i]);
+            if(oneitem != null){
+                oneitem.setStatus(2);
+                oneitem.setOrderID(orderid);
+                orderItemDao.saveOneOrderItem(oneitem);
+            }
 
-
-
-
+            Book book = bookDao.getOneBookByID(bookIDGroup[i]);
+            int reaminNum = book.getInventory() - bookNumGroup[i];
+            book.setInventory(reaminNum);
+            bookDao.savaOneBook(book);
         }
         return 1;
     }
