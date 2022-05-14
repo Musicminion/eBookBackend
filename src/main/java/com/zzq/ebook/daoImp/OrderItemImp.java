@@ -28,6 +28,7 @@ public class OrderItemImp implements OrderItemDao {
         return orderItemRepository.findUserShopCartItem(username);
     }
 
+    // 根据用户名 书籍的ID号，来获取一个OrderItem实例
     public OrderItem checkUserOrderItemByID(String username, int bookID){
 //        return null;
         return orderItemRepository.findUserShopCartItemOfBook(username,bookID);

@@ -22,6 +22,10 @@ public class constant {
     // 下面的项目都是item表格里面的字段
     public static final String BOOKID = "bookID";
     public static final String SINGLE_ITEM_BUYNUM = "buynum";
-    // 下订单
 
+
+    public static final String REFRESHED_BUY_NUM = "refreshedbuynum";
+
+    public static final String ORDER_ITEMID = "itemID";
+    // 下订单
 }

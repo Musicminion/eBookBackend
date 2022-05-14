@@ -23,8 +23,6 @@ public class OrderServiceImp implements OrderService {
     @Autowired
     private BookDao bookDao;
 
-
-
     public OrderItem addOneOrderItemToChart(String username, int bookID, int buynum){
 
         // 获取书的信息
@@ -62,6 +60,36 @@ public class OrderServiceImp implements OrderService {
         // 数据库操作！保存写入
         orderItemDao.addOneOrderItem(newItem);
         return newItem;
+    }
+
+    // 返回-1 实例不存在 返回-2 超过容量限制，返回0 操作正常
+    public int editOneOrderItemBUYNUMInChart(String username, int bookID, int refreshedBuynum){
+
+        OrderItem tmpitem = orderItemDao.checkUserOrderItemByID(username,bookID);
+        if(tmpitem ==null)
+            return -1;
+
+        Book book = bookDao.getOneBookByID(bookID);
+        if(refreshedBuynum > book.getInventory())
+            return -2;
+        tmpitem.setBuynum(refreshedBuynum);
+
+        orderItemDao.saveOneOrderItem(tmpitem);
+        return 0;
+    }
+
+
+    public int orderMakeFromShopCart(int [] bookIDGroup, int [] bookNumGroup, String username,
+            String receivename, String postcode, String phonenumber, String receiveaddress, int size){
+
+
+        for(int i=0; i<size; i++){
+
+
+
+
+        }
+        return 1;
     }
 
     public List<OrderItem> findAllOrderItemInCart(String username){

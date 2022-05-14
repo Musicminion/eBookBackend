@@ -47,9 +47,6 @@ public class loginControl {
         String username = params.get(constant.USERNAME);
         String password = params.get(constant.PASSWORD);
 
-        System.out.println(username);
-        System.out.println(password);
-
         User user = userService.checkUser(username,password);
 
         if(user != null){

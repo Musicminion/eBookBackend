@@ -32,9 +32,6 @@ public class orderControl {
         // 拒绝非法的用户添加购物车到他人用户
         JSONObject auth = SessionUtil.getAuth();
         if(!Objects.equals((String) auth.get(constant.USERNAME), username)){
-
-            System.out.println(username);
-            System.out.println((String) auth.get(constant.USERNAME));
             return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
         }
 
@@ -44,10 +41,6 @@ public class orderControl {
         int IDnum = Integer.parseInt(bookID);
         int buynum = Integer.parseInt(buynumStr);
 
-        System.out.println(username);
-        System.out.println(IDnum);
-        System.out.println(buynum);
-
         OrderItem resultItem = orderService.addOneOrderItemToChart(username,IDnum,buynum);
 
         if(resultItem == null)
@@ -56,13 +49,35 @@ public class orderControl {
         return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.ADD_TO_SHOPCART_SUCCESS);
     }
 
-    @RequestMapping("/refreshShopCartItem")
+    //        接收参数表
+    //        username: user,
+    //        itemID: orderID,
+    //        refreshedbuynum: newbuynum,
+    @RequestMapping("/order/refreshShopCartItem")
     public Msg refreshShopCartItem(@RequestBody Map<String, String> params){
+        String username = params.get(constant.USERNAME);
 
+        // 拒绝非法的用户添加购物车到他人用户
+        JSONObject auth = SessionUtil.getAuth();
+        if(!Objects.equals((String) auth.get(constant.USERNAME), username)){
+            return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
+        }
+
+        String bookID = params.get(constant.BOOKID);
+        String buynumStr = params.get(constant.REFRESHED_BUY_NUM);
+        int IDnum = Integer.parseInt(bookID);
+        int buynum = Integer.parseInt(buynumStr);
+
+
+        int result = orderService.editOneOrderItemBUYNUMInChart(username,IDnum,buynum);
+
+        if(result == 0)
+            return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.EDIT_SHOPCART_SUCCESS);
+
+        if(result <= -1)
+            return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.EDIT_SHOPCART_FAIL);
         return null;
-
     }
-
 
 
     @RequestMapping("/order/queryMyChart")
@@ -77,8 +92,47 @@ public class orderControl {
         return orderService.findAllOrderItemInCart(queryUser);
     }
 
+//        orderFrom : "ShopCart",
+//        username: user,
+//        receivename: orderInfo.receivename,
+//        postcode:orderInfo.postcode,
+//        phonenumber:orderInfo.phonenumber,
+//        receiveaddress:orderInfo.receiveaddress,
+    @RequestMapping("/order/makeorder/shopcart")
+    public Msg orderMakeFromShopCart(@RequestBody Map<String, String> params){
+
+        int itemNum = (params.size() - 6) / 2 ;
+
+        String orderFrom = params.get("orderFrom");
+        String username = params.get(constant.USERNAME);
+        String receivename = params.get("receivename");
+        String postcode = params.get("postcode");
+        String phonenumber = params.get("phonenumber");
+        String receiveaddress = params.get("receiveaddress");
+
+        int[] bookIDGroup = new int[itemNum];
+        int[] bookNumGroup = new int[itemNum];
+
+        for(int i=1; i<=itemNum; i++){
+            String bookIDGroupNum = "bookIDGroup" + i;
+            String bookNumGroupNum = "bookNumGroup" + i;
+            String val1str = params.get(bookIDGroupNum);
+            String val2str = params.get(bookNumGroupNum);
+
+            int val1 = Integer.parseInt(val1str);
+            int val2 = Integer.parseInt(val2str);
+
+            bookIDGroup[i-1] = val1;
+            bookNumGroup[i-1] = val2;
+        }
+
+        int result = orderService.orderMakeFromShopCart(bookIDGroup,bookNumGroup,username,receivename,
+                postcode, phonenumber, receiveaddress,itemNum);
 
 
+
+        return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.EDIT_SHOPCART_SUCCESS);
+    }
 
 
     @RequestMapping("/order/buyOneImmediately")

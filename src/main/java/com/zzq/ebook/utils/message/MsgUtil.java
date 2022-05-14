@@ -26,6 +26,9 @@ public class MsgUtil {
     public static final String ADD_TO_SHOPCART_SUCCESS = "添加到购物车成功！";
     public static final String ADD_TOO_MUCH_TO_SHOPCART = "请求加入的购物车数量过多，超出容量";
 
+    public static final String EDIT_SHOPCART_FAIL = "编辑购物车信息失败";
+    public static final String EDIT_SHOPCART_SUCCESS = "编辑购物车信息成功";
+
     public static final String QUERY_BookID_NOT_EXIST = "本书不存在，请选择其他图书";
 
 
