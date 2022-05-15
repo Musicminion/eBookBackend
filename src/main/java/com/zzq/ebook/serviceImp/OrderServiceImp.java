@@ -85,6 +85,9 @@ public class OrderServiceImp implements OrderService {
         tmpitem.setBuynum(refreshedBuynum);
         tmpitem.setPayprice(book.getPrice()*refreshedBuynum);
 
+        if(refreshedBuynum ==0){
+            tmpitem.setStatus(-1);
+        }
         orderItemDao.saveOneOrderItem(tmpitem);
         return 0;
     }
