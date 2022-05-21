@@ -19,13 +19,12 @@ import com.zzq.ebook.constant.constant;
 import java.util.Map;
 
 
+// -------------------------------------接-----------口-----------表-----------------------------------------------------
 //      接口名称                                接口说明：
 //      /login           登录接口，接收POST请求，参数必须要包括username password，返回用户的完整信息。
 //      /logout          登出接口，接收POST请求，参数无，返回是否登出成功，
 //      /refreshToken    刷新令牌，接收POST请求，参数无，返回当前会话的用户名+请求信息。
-
-//      /userinfo        用户信息接口，接收POST请求，参数包括用户名username，接口返回用户不包括密码的完整数据库表json字段对象，
-//                       会检查当前的回话，判断用户信息，接口用于获取用户的个人信息、权限等
+// ---------------------------------------------------------------------------------------------------------------------
 
 
 @RestController
@@ -34,15 +33,8 @@ public class loginControl {
     @Autowired
     private UserService userService;
 
-
-    // ##############  下面的代码是测试代码区域  ##############
-    //    @Autowired
-    //    private OrderService orderService;
-    // ##############  ###################  ##############
-
-
     @RequestMapping("/login")
-    public Msg function(@RequestBody Map<String, String> params){
+    public Msg login(@RequestBody Map<String, String> params){
 
         String username = params.get(constant.USERNAME);
         String password = params.get(constant.PASSWORD);
@@ -63,13 +55,11 @@ public class loginControl {
             JSONObject data = JSONObject.fromObject(user);
             data.remove(constant.PASSWORD);
 
-            // ##############  下面的代码是测试代码区域  ##############
-            // orderService.addOneOrderItemToChart(username,1,12);
-            // ##############  ###################  ##############
-
+            // 登录成功
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
         }
 
+        // 登录失败
         return MsgUtil.makeMsg(MsgCode.LOGIN_USER_ERROR);
     }
 
@@ -94,4 +84,29 @@ public class loginControl {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, auth);
         }
     }
+
+    @RequestMapping("/register")
+    public Msg register(@RequestBody Map<String, String> params){
+//agreement: true
+//confirm: "1231231"
+//email: "hangziqian@sjtu.edu.cn"
+//location: "123123123"
+//password: "1231231"
+//phone: "18062765851"
+//username: "123123123"
+        String username = params.get(constant.USERNAME);
+        String email = params.get(constant.EMAIL);
+        String location = params.get("location");
+        String password = params.get(constant.PASSWORD);
+        String phone = params.get("phone");
+
+
+
+        return null;
+    }
+
+
+
+
+
 }

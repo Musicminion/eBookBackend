@@ -1,6 +1,5 @@
 package com.zzq.ebook.controller;
 
-
 import com.zzq.ebook.constant.constant;
 import com.zzq.ebook.entity.User;
 import com.zzq.ebook.service.UserService;
@@ -17,13 +16,36 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.Objects;
 
+//   ___  ___   ________   _______    ________          ________   ________   ___
+//  |\  \|\  \ |\   ____\ |\  ___ \  |\   __  \        |\   __  \ |\   __  \ |\  \
+//  \ \  \\\  \\ \  \___|_\ \   __/| \ \  \|\  \       \ \  \|\  \\ \  \|\  \\ \  \
+//   \ \  \\\  \\ \_____  \\ \  \_|/__\ \   _  _\       \ \   __  \\ \   ____\\ \  \
+//    \ \  \\\  \\|____|\  \\ \  \_|\ \\ \  \\  \|       \ \  \ \  \\ \  \___| \ \  \
+//     \ \_______\ ____\_\  \\ \_______\\ \__\\ _\        \ \__\ \__\\ \__\     \ \__\
+//      \|_______||\_________\\|_______| \|__|\|__|        \|__|\|__| \|__|      \|__|
+//                \|_________|
+//
+
+// -------------------------------------接-----------口-----------表-----------------------------------------------------
+//      接口名称                                接口说明：
+//      /userinfo        用户信息接口，接收POST请求，参数必须包括用户名username，接口返回用户不包括密码的完整数据库表json字段对象，
+//                       会检查当前的回话，判断用户信息，接口用于获取用户的个人信息、权限等
+//      /checkUserExit   用户是否存在的检查，接收POST请求，参数必须包括要检查的用户名username，接口返回查询结果，是否存在.
+//                       该接口不需要鉴定权限
+//      /
+// ---------------------------------------------------------------------------------------------------------------------
+
+
+
 @RestController
 public class userControl {
 
     @Autowired
     private UserService userService;
 
-    // 请求用户的信息，需要附上参数用户名
+    // 函数用途：用户信息接口，接收POST请求，参数必须包括用户名username，接口返回用户不包括密码的完整数据库表json字段对象，
+    //         会检查当前的回话，判断用户信息，接口用于获取用户的个人信息、权限等
+    // 使用场景：购物下单时候，读取![当前]!用户信息,前台展示
     @RequestMapping("/user/info")
     public Msg requestUserInfo(@RequestBody Map<String, String> params){
         String username = params.get(constant.USERNAME);
@@ -41,4 +63,17 @@ public class userControl {
 
         return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.SUCCESS_MSG, data);
     }
+
+
+    // 函数用途：用户是否存在的检查，接收POST请求，参数必须包括要检查的用户名username，接口返回查询结果，是否存在.
+    //         该接口不需要鉴定权限
+    // 使用场景：注册页面，用户输入用户名的时候
+    @RequestMapping("/user/checkUserExit")
+    public Msg checkUserExit(@RequestBody Map<String, String> params){
+        String username = params.get(constant.USERNAME);
+
+        return null;
+    }
+
+
 }
