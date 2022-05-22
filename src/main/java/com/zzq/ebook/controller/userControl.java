@@ -8,11 +8,13 @@ import com.zzq.ebook.utils.message.MsgCode;
 import com.zzq.ebook.utils.message.MsgUtil;
 import com.zzq.ebook.utils.session.SessionUtil;
 import net.sf.json.JSONObject;
+import org.aspectj.apache.bcel.classfile.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,7 +34,7 @@ import java.util.Objects;
 //                       会检查当前的回话，判断用户信息，接口用于获取用户的个人信息、权限等
 //      /checkUserExit   用户是否存在的检查，接收POST请求，参数必须包括要检查的用户名username，接口返回查询结果，是否存在.
 //                       该接口不需要鉴定权限
-//      /
+//      /queryAllUserInfo请求所有的用户的信息，接收POST请求
 // ---------------------------------------------------------------------------------------------------------------------
 
 
@@ -71,9 +73,28 @@ public class userControl {
     @RequestMapping("/user/checkUserExit")
     public Msg checkUserExit(@RequestBody Map<String, String> params){
         String username = params.get(constant.USERNAME);
+        System.out.println(username);
 
-        return null;
+        if(!userService.checkUserIfExist(username)){
+            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.SUCCESS_MSG);
+        }
+        else{
+            return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.USERNAME_REPETE);
+        }
     }
 
+    //请求所有的用户信息列表
+    @RequestMapping("/user/queryAllUserInfo")
+    public Msg queryAllUserInfo(){
+        JSONObject auth = SessionUtil.getAuth();
+        if(auth != null && Objects.equals(auth.get(constant.PRIVILEGE),2)){
 
+
+
+
+            return null;
+        }
+        else
+            return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
+    }
 }

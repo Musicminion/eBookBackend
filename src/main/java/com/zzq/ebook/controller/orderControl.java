@@ -130,8 +130,6 @@ public class orderControl {
         int result = orderService.orderMakeFromShopCart(bookIDGroup,bookNumGroup,username,receivename,
                 postcode, phonenumber, receiveaddress,itemNum);
 
-
-
         return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.EDIT_SHOPCART_SUCCESS);
     }
 

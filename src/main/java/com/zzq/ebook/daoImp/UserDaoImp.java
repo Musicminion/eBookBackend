@@ -6,6 +6,8 @@ import com.zzq.ebook.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class UserDaoImp implements UserDao {
 
@@ -19,6 +21,10 @@ public class UserDaoImp implements UserDao {
     @Override
     public User getUserByusername(String username){
         return userRepository.getOne(username);
+    }
+
+    public List<User> getAllUser(){
+        return userRepository.findAll();
     }
 
 }

@@ -12,14 +12,13 @@ import javax.persistence.Table;
 public class Book {
     @Id
     private int ID;
-
     private String ISBN;
     private String bookname;
     private String displaytitle;
     private int inventory;
     private String departure;
     private String author;
-    private double price;
+    private int price;
     private int sellnumber;
     private String imgtitle;
     private String publisher;
@@ -41,7 +40,7 @@ public class Book {
     public String getDeparture() {
         return departure;
     }
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
     public String getDescription() {
@@ -81,7 +80,7 @@ public class Book {
     public void setISBN(String ISBN) {
         this.ISBN = ISBN;
     }
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
     public void setPublisher(String publisher) {

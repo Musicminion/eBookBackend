@@ -31,6 +31,8 @@ public class MsgUtil {
 
     public static final String QUERY_BookID_NOT_EXIST = "本书不存在，请选择其他图书";
 
+    public static final String USERNAME_REPETE = "用户名重复，请重新输入用户名";
+
 
     public static Msg makeMsg(MsgCode code, JSONObject data){
         return new Msg(code, data);

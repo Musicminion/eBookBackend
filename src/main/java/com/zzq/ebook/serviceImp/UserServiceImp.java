@@ -6,6 +6,8 @@ import com.zzq.ebook.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImp implements UserService {
 
@@ -23,4 +25,17 @@ public class UserServiceImp implements UserService {
         return userDao.getUserByusername(username);
     }
 
+    @Override
+    public boolean checkUserIfExist(String username){
+        User user = userDao.getUserByusername(username);
+        return user != null;
+    }
+
+    @Override
+    public List<User> getAllUser(){
+
+
+
+        return null;
+    }
 }
