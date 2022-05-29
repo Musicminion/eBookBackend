@@ -137,6 +137,8 @@ public class orderControl {
     @RequestMapping("/order/buyOneImmediately")
     public Msg buyOneImmediately(@RequestBody Map<String, String> params){
         // 首先，获取必要参数，用户名、收件人、联系电话、邮政编码、收件地址、购买书本的ID、购买书籍的数量、购买时的价格
+        JSONObject obj = new JSONObject();
+
 
         return null;
     }

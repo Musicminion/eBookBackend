@@ -33,9 +33,6 @@ public class UserServiceImp implements UserService {
 
     @Override
     public List<User> getAllUser(){
-
-
-
-        return null;
+        return userDao.getAllUser();
     }
 }

@@ -7,6 +7,7 @@ import com.zzq.ebook.utils.message.Msg;
 import com.zzq.ebook.utils.message.MsgCode;
 import com.zzq.ebook.utils.message.MsgUtil;
 import com.zzq.ebook.utils.session.SessionUtil;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.aspectj.apache.bcel.classfile.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,16 +86,20 @@ public class userControl {
 
     //请求所有的用户信息列表
     @RequestMapping("/user/queryAllUserInfo")
-    public Msg queryAllUserInfo(){
+    public List<User> queryAllUserInfo(){
         JSONObject auth = SessionUtil.getAuth();
-        if(auth != null && Objects.equals(auth.get(constant.PRIVILEGE),2)){
+        // 检查是全局管理员
+        if(auth != null && Objects.equals(auth.get(constant.PRIVILEGE),0)){
+            List<User> resultData = userService.getAllUser();
 
+            // 移除密码等敏感信息
+            for(int i=0;i<resultData.size(); i++){
+                resultData.get(i).setPassword("");
+            }
 
-
-
-            return null;
+            return userService.getAllUser();
         }
         else
-            return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
+            return null;
     }
 }
