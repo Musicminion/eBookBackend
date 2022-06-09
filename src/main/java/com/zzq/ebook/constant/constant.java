@@ -25,7 +25,13 @@ public class constant {
 
 
     public static final String REFRESHED_BUY_NUM = "refreshedbuynum";
-
     public static final String ORDER_ITEMID = "itemID";
-    // 下订单
+
+    // 用户操作的相关
+    public static final String SET_OBJ_USERNAME = "setUsername";
+    public static final String SET_OBJ_PERMITSTATE = "loginPermitState";
+    //    let obj = {
+//      setUsername : setUser,
+//      loginPermitState:loginPermitState
+//    };
 }

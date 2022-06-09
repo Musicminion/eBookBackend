@@ -18,4 +18,7 @@ public interface UserService {
     // 管理员功能
     // 请求数据库中的 所有的用户列表
     public List<User> getAllUser();
+
+
+    public boolean setUserLoginPermit(String setObjUser, int setObjState);
 }

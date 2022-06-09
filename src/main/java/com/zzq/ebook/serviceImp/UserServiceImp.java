@@ -35,4 +35,19 @@ public class UserServiceImp implements UserService {
     public List<User> getAllUser(){
         return userDao.getAllUser();
     }
+
+    @Override
+    public boolean  setUserLoginPermit(String setObjUser, int setObjState){
+        User user = userDao.getUserByusername(setObjUser);
+        if(user != null){
+            user.setForbidlogin(setObjState);
+            userDao.saveOneUser(user);
+            return true;
+        }
+        else {
+            System.out.println("没有获取到用户实体");
+            return false;
+        }
+
+    }
 }

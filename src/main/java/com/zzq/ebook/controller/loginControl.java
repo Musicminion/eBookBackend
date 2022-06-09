@@ -23,7 +23,8 @@ import java.util.Map;
 //      接口名称                                接口说明：
 //      /login           登录接口，接收POST请求，参数必须要包括username password，返回用户的完整信息。
 //      /logout          登出接口，接收POST请求，参数无，返回是否登出成功，
-//      /refreshToken    刷新令牌，接收POST请求，参数无，返回当前会话的用户名+请求信息。
+//      /checkSession    检查当前会话的Session，接收POST请求，返回当前是否处于登录的窗台
+//      /register        注册接口，接收POST请求，接收的参数如下：是否同意用户协议，用户名，密码，邮件，用户住址信息
 // ---------------------------------------------------------------------------------------------------------------------
 
 
@@ -89,7 +90,7 @@ public class loginControl {
     public Msg register(@RequestBody Map<String, String> params){
 //agreement: true
 //confirm: "1231231"
-//email: "hangziqian@sjtu.edu.cn"
+//email: "zhangziqian@sjtu.edu.cn"
 //location: "123123123"
 //password: "1231231"
 //phone: "18062765851"

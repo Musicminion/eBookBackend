@@ -12,4 +12,6 @@ public interface UserDao {
     User getUserByusername(String username);
 
     List<User> getAllUser();
+
+    User saveOneUser(User oneuser);
 }

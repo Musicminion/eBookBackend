@@ -84,7 +84,7 @@ public class userControl {
         }
     }
 
-    //请求所有的用户信息列表
+    //请求所有的用户信息列表 此功能仅限管理员使用
     @RequestMapping("/user/queryAllUserInfo")
     public List<User> queryAllUserInfo(){
         JSONObject auth = SessionUtil.getAuth();
@@ -101,5 +101,37 @@ public class userControl {
         }
         else
             return null;
+    }
+
+    //设置用户是否可以登录，此功能仅限管理员使用
+    //    /user/setUserLoginPermit
+    @RequestMapping("/user/setUserLoginPermit")
+    public Msg setUserLoginPermit(@RequestBody Map<String, String> params){
+    //     前端来的数据格式，解析参考
+    //    let obj = {
+    //      setUsername : setUser,
+    //      loginPermitState:loginPermitState
+    //    };
+        JSONObject auth = SessionUtil.getAuth();
+        // 检查是全局管理员
+        if(auth != null && Objects.equals(auth.get(constant.PRIVILEGE),0)){
+
+            String setObjUsername = params.get(constant.SET_OBJ_USERNAME);
+            String setObjPermitState = params.get(constant.SET_OBJ_PERMITSTATE);
+            int setObjPermitStateVal = Integer.parseInt(setObjPermitState);
+            System.out.println(setObjUsername);
+            System.out.println(setObjPermitState);
+            System.out.println(setObjPermitStateVal);
+            userService.setUserLoginPermit(setObjUsername,setObjPermitStateVal);
+
+
+            // 自己修改自己的登录状态，会被拒绝 这在逻辑上也是不好的一个操作
+            if(Objects.equals(auth.get(constant.USERNAME),setObjUsername))
+                return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.SET_LOGIN_PERMISSION_FAIL);
+
+            return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.SET_LOGIN_PERMISSION_SUCCESS);
+        }
+        else
+            return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.SET_LOGIN_PERMISSION_FAIL);
     }
 }

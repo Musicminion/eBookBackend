@@ -33,6 +33,8 @@ public class MsgUtil {
 
     public static final String USERNAME_REPETE = "用户名重复，请重新输入用户名";
 
+    public static final String SET_LOGIN_PERMISSION_SUCCESS = "设置用户登录许可成功！";
+    public static final String SET_LOGIN_PERMISSION_FAIL = "设置用户登录许可失败！";
 
     public static Msg makeMsg(MsgCode code, JSONObject data){
         return new Msg(code, data);

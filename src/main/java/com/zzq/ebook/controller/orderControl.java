@@ -23,6 +23,12 @@ public class orderControl {
 
     @Autowired
     private OrderService orderService;
+
+    //   /order/addToChart
+    //   接收参数表
+    //        username: 用户名,
+    //        bookID: 添加到购物车中，书的ID
+    //        buynum: 买的数量
     @RequestMapping("/order/addToChart")
     public Msg addToChart(@RequestBody Map<String, String> params){
         String username = params.get(constant.USERNAME);
@@ -47,6 +53,8 @@ public class orderControl {
         return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.ADD_TO_SHOPCART_SUCCESS);
     }
 
+
+
     //        接收参数表
     //        username: user,
     //        itemID: orderID,
@@ -54,7 +62,6 @@ public class orderControl {
     @RequestMapping("/order/refreshShopCartItem")
     public Msg refreshShopCartItem(@RequestBody Map<String, String> params){
         String username = params.get(constant.USERNAME);
-
         // 拒绝非法的用户添加购物车到他人用户
         JSONObject auth = SessionUtil.getAuth();
         if(!Objects.equals((String) auth.get(constant.USERNAME), username)){
@@ -77,7 +84,7 @@ public class orderControl {
         return null;
     }
 
-
+    // 功能：请求用户自己的购物车信息
     @RequestMapping("/order/queryMyChart")
     public List<OrderItem> queryChart(@RequestBody Map<String, String> params){
         String queryUser = params.get(constant.USERNAME);
@@ -90,20 +97,19 @@ public class orderControl {
         return orderService.findAllOrderItemInCart(queryUser);
     }
 
-//        orderFrom : "ShopCart",
-//        username: user,
-//        receivename: orderInfo.receivename,
-//        postcode:orderInfo.postcode,
-//        phonenumber:orderInfo.phonenumber,
-//        receiveaddress:orderInfo.receiveaddress,
+    //        orderFrom : "ShopCart",
+    //        username: user,
+    //        receivename: orderInfo.receivename,
+    //        postcode:orderInfo.postcode,
+    //        phonenumber:orderInfo.phonenumber,
+    //        receiveaddress:orderInfo.receiveaddress,
+
+
     @RequestMapping("/order/makeorder/shopcart")
     public Msg orderMakeFromShopCart(@RequestBody Map<String, String> params){
-
         int itemNum = (params.size() - 6) / 2 ;
-
         if(itemNum <= 0)
             return null;
-
         String orderFrom = params.get("orderFrom");
         String username = params.get(constant.USERNAME);
         String receivename = params.get("receivename");

@@ -27,4 +27,8 @@ public class UserDaoImp implements UserDao {
         return userRepository.findAll();
     }
 
+    @Override
+    public User saveOneUser(User oneUser){
+        return userRepository.save(oneUser);
+    }
 }
