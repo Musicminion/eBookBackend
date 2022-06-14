@@ -107,13 +107,13 @@ public class userControl {
     //    /user/setUserLoginPermit
     @RequestMapping("/user/setUserLoginPermit")
     public Msg setUserLoginPermit(@RequestBody Map<String, String> params){
-    //     前端来的数据格式，解析参考
+    //    前端来的数据格式，解析参考
     //    let obj = {
     //      setUsername : setUser,
     //      loginPermitState:loginPermitState
     //    };
         JSONObject auth = SessionUtil.getAuth();
-        // 检查是全局管理员
+        // 检查是全局管理员，才允许设置
         if(auth != null && Objects.equals(auth.get(constant.PRIVILEGE),0)){
 
             String setObjUsername = params.get(constant.SET_OBJ_USERNAME);
