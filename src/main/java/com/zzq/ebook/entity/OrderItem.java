@@ -20,7 +20,7 @@ public class OrderItem {
     private int orderID;
     private int bookID;
     private int buynum;
-    private double payprice;
+    private int payprice;
     private Timestamp create_Itemtime;
     private String comment;
 
@@ -36,7 +36,7 @@ public class OrderItem {
     public String getBelonguser() {
         return belonguser;
     }
-    public double getPayprice() {
+    public int getPayprice() {
         return payprice;
     }
     public Timestamp getCreate_Itemtime() {
@@ -47,7 +47,7 @@ public class OrderItem {
         return comment;
     }
 
-    public void setPayprice(double payprice) {
+    public void setPayprice(int payprice) {
         this.payprice = payprice;
     }
     public void setBelonguser(String belonguser) {

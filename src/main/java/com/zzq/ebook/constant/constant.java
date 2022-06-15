@@ -35,9 +35,19 @@ public class constant {
     public static final String POLICYDATA ="PolicyData";
     public static final String SIGNATURE = "Signature";
 
-//    PolicyData
-    //    let obj = {
-//      setUsername : setUser,
-//      loginPermitState:loginPermitState
-//    };
+
+    // book书籍数据库字段
+    public static final String ID = "ID";
+    public static final String ISBN = "ISBN";
+    public static final String BOOKNAME ="bookname";
+    public static final String DISPLAYTITLE = "displaytitle";
+    public static final String INVENTORY ="inventory";
+    public static final String DEPARTURE ="departure";
+    public static final String AUTHOR = "author";
+    public static final String PRICE = "price";
+    public static final String SELLNUMBER ="sellnumber";
+    public static final String IMGTITLE = "imgtitle";
+    public static final String PUBLISHER = "publisher";
+    public static final String DESCRIPTION = "description";
+
 }

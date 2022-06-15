@@ -36,8 +36,8 @@ public class OrderServiceImp implements OrderService {
 
         // 获取书的信息
         Book book = bookDao.getOneBookByID(bookID);
-        double bookPrice = book.getPrice();
-        double itemAllPrice = bookPrice * buynum;
+        int bookPrice = book.getPrice();
+        int itemAllPrice = bookPrice * buynum;
         if(buynum > book.getInventory())
             return null;
 
@@ -122,7 +122,7 @@ public class OrderServiceImp implements OrderService {
             book.setInventory(reaminNum);
             int newSellnum = book.getSellnumber() + bookNumGroup[i];
             book.setSellnumber(newSellnum);
-            bookDao.savaOneBook(book);
+            bookDao.saveOneBook(book);
         }
         return 1;
     }
