@@ -23,6 +23,17 @@ public class Order {
     private String contactphone;
     private String receivername;
 
+    private int totalprice;
+
+
+    public void setTotalprice(int price){
+        this.totalprice = price;
+    }
+
+    public int getTotalprice(){
+        return this.totalprice;
+    }
+
     public void setOrderID(int orderID) {
         OrderID = orderID;
     }

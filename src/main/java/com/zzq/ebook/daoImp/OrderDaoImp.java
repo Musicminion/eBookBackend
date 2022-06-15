@@ -18,4 +18,10 @@ public class OrderDaoImp implements OrderDao {
     public Order saveOneOrder(Order oneOrder){
         return orderRepository.save(oneOrder);
     }
+
+
+    @Override
+    public Order getOrderByID(int ID){
+        return orderRepository.getOne(ID);
+    }
 }

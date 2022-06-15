@@ -109,11 +109,14 @@ public class OrderServiceImp implements OrderService {
 
         System.out.println(orderid);
 
+        int totalMoney = 0;
+
         for(int i=0; i<size; i++){
             OrderItem oneitem = orderItemDao.checkUserOrderItemByID(username,bookIDGroup[i]);
             if(oneitem != null){
                 oneitem.setStatus(2);
                 oneitem.setOrderID(orderid);
+                totalMoney =totalMoney + oneitem.getPayprice();
                 orderItemDao.saveOneOrderItem(oneitem);
             }
 
@@ -124,6 +127,13 @@ public class OrderServiceImp implements OrderService {
             book.setSellnumber(newSellnum);
             bookDao.saveOneBook(book);
         }
+
+        if(orderid >=0 ){
+            Order justNowOrder = orderDao.getOrderByID(orderid);
+            justNowOrder.setTotalprice(totalMoney);
+            orderDao.saveOneOrder(justNowOrder);
+        }
+
         return 1;
     }
 
