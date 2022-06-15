@@ -12,4 +12,6 @@ public interface OrderItemDao {
     OrderItem checkUserOrderItemByID(String username, int bookID);
 
     OrderItem saveOneOrderItem(OrderItem saveObj);
+
+    List<OrderItem> getAllOrderItem();
 }

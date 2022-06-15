@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -62,4 +63,17 @@ public class Order {
     public void setDestination(String destination) {this.destination = destination;}
     public void setPostalcode(String postalcode) {this.postalcode = postalcode;}
     public void setReceivername(String receivername) {this.receivername = receivername;}
+
+
+    @OneToMany
+    @JoinColumn(name = "OrderID")
+    private List<OrderItem> chileItem;
+
+    public void setChileItem(List<OrderItem> chileItem) {
+        this.chileItem = chileItem;
+    }
+
+    public List<OrderItem> getChileItem() {
+        return chileItem;
+    }
 }

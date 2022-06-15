@@ -9,6 +9,8 @@ import com.zzq.ebook.entity.Order;
 import com.zzq.ebook.entity.OrderItem;
 import com.zzq.ebook.repository.BookRepository;
 import com.zzq.ebook.service.OrderService;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -140,4 +142,34 @@ public class OrderServiceImp implements OrderService {
     public List<OrderItem> findAllOrderItemInCart(String username){
         return orderItemDao.queryOneUserShopCart(username);
     }
+
+
+    public Order getOneOrder(int ID){
+        return orderDao.getOrderByID(ID);
+    }
+
+    public List<Order> getAllOrder(){
+        return orderDao.getAllOrder();
+    }
+
+
+    public List<OrderItem> getAllOrderItem(){
+        return orderItemDao.getAllOrderItem();
+    }
+
+    public JSONArray getAllOrderItemWithBook(){
+        JSONArray respData = new JSONArray();
+        List<OrderItem> allData = orderItemDao.getAllOrderItem();
+        for(int i=0; i<allData.size(); i++){
+            JSONObject obj = JSONObject.fromObject(allData.get(i));
+            int bookID = allData.get(i).getBookID();
+
+            Book tmpbook = bookDao.getOneBookByID(bookID);
+            obj.put("displaytitle",tmpbook.getDisplaytitle());
+            respData.add(obj);
+        }
+
+        return respData;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.zzq.ebook.controller;
 
 import com.zzq.ebook.constant.constant;
+import com.zzq.ebook.entity.Order;
 import com.zzq.ebook.entity.OrderItem;
 import com.zzq.ebook.service.OrderService;
 import com.zzq.ebook.utils.message.Msg;
@@ -149,4 +150,22 @@ public class orderControl {
         return null;
     }
 
+    @RequestMapping("/order/getAllOrderItem")
+    public JSONArray getAllOrderItem(){
+        return orderService.getAllOrderItemWithBook();
+    }
+
+
+    @RequestMapping("/test")
+    public List<Order> testFunction(){
+        System.out.println("测试开始！！！！！！！！！！");
+
+
+
+        //        System.out.println(order.getChileItem().size());
+        //        JSONObject obj = JSONObject.fromObject(order.getChileItem());
+        //        System.out.println(obj);
+        //        return orderService;
+        return orderService.getAllOrder();
+    }
 }
