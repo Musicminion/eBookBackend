@@ -30,6 +30,12 @@ public class constant {
     // 用户操作的相关
     public static final String SET_OBJ_USERNAME = "setUsername";
     public static final String SET_OBJ_PERMITSTATE = "loginPermitState";
+
+
+    public static final String POLICYDATA ="PolicyData";
+    public static final String SIGNATURE = "Signature";
+
+//    PolicyData
     //    let obj = {
 //      setUsername : setUser,
 //      loginPermitState:loginPermitState

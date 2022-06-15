@@ -5,6 +5,5 @@ package com.zzq.ebook.privateKey;
 
 public class keyInfoexample {
     public static final String accessId = "阿里云accessId ";
-
     public static final String picKey = "阿里云 key ";
 }
