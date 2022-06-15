@@ -68,6 +68,10 @@ public class BookServiceImp implements BookService {
         }
     }
 
+    public void deleteOneBook(Integer bookid){
+        bookDao.deleteOneBookByID(bookid);
+    }
+
     public List<Book> getBookAll(){
         return bookDao.getAllBooks();
     }

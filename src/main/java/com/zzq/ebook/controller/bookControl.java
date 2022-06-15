@@ -164,7 +164,13 @@ public class bookControl {
 
     @RequestMapping("/deleteBook")
     public Msg deleteBook(@RequestBody Map<String, String> params){
+        JSONObject auth = SessionUtil.getAuth();
+        if(auth == null || !Objects.equals(auth.get(constant.PRIVILEGE),0))
+            return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.ERROR_MSG);
 
+        String BookIDStr = params.get(constant.BOOKID);
+        Integer BookID = Integer.parseInt(BookIDStr);
+        bookService.deleteOneBook(BookID);
         return MsgUtil.makeMsg(MsgCode.SUCCESS);
     }
 

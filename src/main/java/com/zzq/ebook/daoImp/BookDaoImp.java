@@ -28,4 +28,9 @@ public class BookDaoImp implements BookDao {
     public List<Book> getAllBooks(){
         return bookRepository.findAll();
     }
+
+    @Override
+    public void deleteOneBookByID(Integer id){
+        bookRepository.deleteById(id);
+    }
 }

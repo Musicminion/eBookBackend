@@ -15,4 +15,6 @@ public interface BookService {
 
     public Book editOneBook(JSONObject bookinfo);
 
+    public void deleteOneBook(Integer bookid);
+
 }
