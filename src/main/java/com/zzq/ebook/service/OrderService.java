@@ -26,7 +26,7 @@ public interface OrderService {
 
     public Order getOneOrder(int ID);
 
-    public List<Order> getAllOrder();
+    public JSONArray getAllOrder();
 
 
     public List<OrderItem> getAllOrderItem();

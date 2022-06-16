@@ -152,12 +152,21 @@ public class orderControl {
 
     @RequestMapping("/order/getAllOrderItem")
     public JSONArray getAllOrderItem(){
+        System.out.println("请求获得所有的订单项目");
         return orderService.getAllOrderItemWithBook();
     }
 
 
+    @RequestMapping("/order/getAllOrder")
+    public JSONArray getAllOrder(){
+        System.out.println("请求获得所有的订单");
+        return orderService.getAllOrder();
+    }
+
+
+//  测试的接口
     @RequestMapping("/test")
-    public List<Order> testFunction(){
+    public JSONArray testFunction(){
         System.out.println("测试开始！！！！！！！！！！");
 
 

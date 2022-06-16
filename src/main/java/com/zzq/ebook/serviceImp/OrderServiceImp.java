@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 
@@ -59,7 +58,7 @@ public class OrderServiceImp implements OrderService {
         OrderItem newItem = new OrderItem();
         newItem.setStatus(constant.IN_SHOPPING_CHART);
         newItem.setBelonguser(username);
-        newItem.setOrderID(0);
+        newItem.setOrderID(2);
         newItem.setBookID(bookID);
         newItem.setBuynum(buynum);
         newItem.setPayprice(itemAllPrice);
@@ -148,8 +147,34 @@ public class OrderServiceImp implements OrderService {
         return orderDao.getOrderByID(ID);
     }
 
-    public List<Order> getAllOrder(){
-        return orderDao.getAllOrder();
+    public JSONArray getAllOrder(){
+        JSONArray respData = new JSONArray();
+
+        List<Order> allOrder = orderDao.getAllOrder();
+
+        for(Order order : allOrder){
+            JSONObject obj = JSONObject.fromObject(order);
+            List<OrderItem> childItemGroup = order.getChileItem();
+
+            JSONArray childJSON = new JSONArray().fromObject(childItemGroup);
+
+            for(int i=0;i<childItemGroup.size();i++){
+                int bookID = childItemGroup.get(i).getBookID();
+                Book tmpbook = bookDao.getOneBookByID(bookID);
+
+                JSONObject oneItemInchildJSON = childJSON.getJSONObject(i);
+
+                oneItemInchildJSON.put("booktitle", tmpbook.getDisplaytitle());
+                oneItemInchildJSON.put("bookurl", tmpbook.getImgtitle());
+
+                childJSON.set(i,oneItemInchildJSON);
+            }
+
+            obj.put("chileItem",childJSON);
+            respData.add(obj);
+        }
+
+        return respData;
     }
 
 
@@ -160,12 +185,12 @@ public class OrderServiceImp implements OrderService {
     public JSONArray getAllOrderItemWithBook(){
         JSONArray respData = new JSONArray();
         List<OrderItem> allData = orderItemDao.getAllOrderItem();
-        for(int i=0; i<allData.size(); i++){
-            JSONObject obj = JSONObject.fromObject(allData.get(i));
-            int bookID = allData.get(i).getBookID();
-
+        for (OrderItem allDatum : allData) {
+            JSONObject obj = JSONObject.fromObject(allDatum);
+            int bookID = allDatum.getBookID();
             Book tmpbook = bookDao.getOneBookByID(bookID);
-            obj.put("displaytitle",tmpbook.getDisplaytitle());
+            obj.put("displaytitle", tmpbook.getDisplaytitle());
+            obj.put("imgtitle", tmpbook.getImgtitle());
             respData.add(obj);
         }
 
