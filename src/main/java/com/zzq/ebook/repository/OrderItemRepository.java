@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem,Integer> {
@@ -20,4 +21,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Integer> {
     @Query(value = "from OrderItem where belonguser = :belonguser and bookID = :bookID and status =0")
     OrderItem findUserShopCartItemOfBook(@Param("belonguser") String belonguser,@Param("bookID") int bookID);
 
+    List<OrderItem> findOrderItemsByBelonguser(String username);
+
+
+//    List<OrderItem> findOrderItemsByCreate_ItemtimeBetween();
 }

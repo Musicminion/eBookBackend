@@ -152,15 +152,36 @@ public class orderControl {
 
     @RequestMapping("/order/getAllOrderItem")
     public JSONArray getAllOrderItem(){
-        System.out.println("请求获得所有的订单项目");
+
         return orderService.getAllOrderItemWithBook();
     }
 
-
     @RequestMapping("/order/getAllOrder")
     public JSONArray getAllOrder(){
-        System.out.println("请求获得所有的订单");
+
         return orderService.getAllOrder();
+    }
+
+    //用户个人的订单
+    @RequestMapping("/order/getUserOrderItem")
+    public JSONArray getUserOrderItem(){
+        JSONObject auth = SessionUtil.getAuth();
+        assert auth != null;
+        String username = (String) auth.get(constant.USERNAME);
+
+        return orderService.getUserOrderItemWithBook(username);
+    }
+
+    //用户个人的订单项目
+    @RequestMapping("/order/getUserOrder")
+    public JSONArray getUserOrder(){
+        JSONObject auth = SessionUtil.getAuth();
+        assert auth != null;
+        String username = (String) auth.get(constant.USERNAME);
+
+        //        System.out.println("请求获得所有的订单");
+//        return orderService
+        return null;
     }
 
 

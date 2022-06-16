@@ -42,4 +42,9 @@ public class OrderItemImp implements OrderItemDao {
     public List<OrderItem> getAllOrderItem(){
         return orderItemRepository.findAll();
     }
+
+    @Override
+    public List<OrderItem> getUserOrderItem(String username){
+        return orderItemRepository.findOrderItemsByBelonguser(username);
+    }
 }

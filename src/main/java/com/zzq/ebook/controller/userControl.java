@@ -54,6 +54,7 @@ public class userControl {
         String username = params.get(constant.USERNAME);
         JSONObject auth = SessionUtil.getAuth();
         // 拒绝非法的用户获取用户的信息
+        assert auth != null;
         if(!Objects.equals((String) auth.get(constant.USERNAME), username)){
 
             System.out.println(username);

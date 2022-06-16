@@ -25,6 +25,7 @@ public class OrderDaoImp implements OrderDao {
 
     @Override
     public Order getOrderByID(int ID){
+
         return orderRepository.getOne(ID);
     }
 
@@ -33,5 +34,7 @@ public class OrderDaoImp implements OrderDao {
         return orderRepository.findAll();
     }
 
-
+    public List<Order> getUserOrder(String username){
+        return orderRepository.findOrdersByBelonguser(username);
+    }
 }

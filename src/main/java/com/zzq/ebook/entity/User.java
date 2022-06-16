@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -72,7 +70,20 @@ public class User {
     }
 
 
-//    public void setUsername(String username) {
+    @OneToMany
+    @JoinColumn(name = "belonguser")
+    private List<OrderItem> childOrderItem;
+
+    public List<OrderItem> getChildOrderItem() {
+        return childOrderItem;
+    }
+
+    public void setChildOrderItem(List<OrderItem> childOrderItem) {
+        this.childOrderItem = childOrderItem;
+    }
+
+
+    //    public void setUsername(String username) {
 //        this.username = username;
 //    }
 }

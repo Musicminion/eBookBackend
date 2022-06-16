@@ -177,7 +177,6 @@ public class OrderServiceImp implements OrderService {
         return respData;
     }
 
-
     public List<OrderItem> getAllOrderItem(){
         return orderItemDao.getAllOrderItem();
     }
@@ -193,8 +192,34 @@ public class OrderServiceImp implements OrderService {
             obj.put("imgtitle", tmpbook.getImgtitle());
             respData.add(obj);
         }
+        return respData;
+    }
+
+
+    public List<OrderItem> getUserOrderItem(String username){
+        return orderItemDao.getUserOrderItem(username);
+    }
+
+
+    public List<Order> getUserOrder(String username){
+        return orderDao.getUserOrder(username);
+    }
+
+    public JSONArray getUserOrderItemWithBook(String username){
+        JSONArray respData = new JSONArray();
+        List<OrderItem> allData = orderItemDao.getUserOrderItem(username);
+
+        for (OrderItem allDatum : allData) {
+            JSONObject obj = JSONObject.fromObject(allDatum);
+            int bookID = allDatum.getBookID();
+            Book tmpbook = bookDao.getOneBookByID(bookID);
+            obj.put("displaytitle", tmpbook.getDisplaytitle());
+            obj.put("imgtitle", tmpbook.getImgtitle());
+            respData.add(obj);
+        }
 
         return respData;
     }
+
 
 }
