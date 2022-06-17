@@ -2,6 +2,7 @@ package com.zzq.ebook.repository;
 
 import com.zzq.ebook.entity.OrderItem;
 import com.zzq.ebook.entity.User;
+import net.sf.json.JSONArray;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,6 +24,14 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Integer> {
 
     List<OrderItem> findOrderItemsByBelonguser(String username);
 
+//
+    @Query(value = "select belonguser,sum(payprice) from OrderItem " +
+            "where status =2 and create_Itemtime >= :starttime and create_Itemtime <= :endtime " +
+            "group by belonguser")
+    JSONArray userConsumeStatistic(@Param(value = "starttime") Date starttime, @Param(value = "endtime") Date endtime);
 
+
+//    @Query(value = "select * from OrderItem where create_Itemtime &gt;= ?1",nativeQuery = true)
+//    JSONArray tset(String test);
 //    List<OrderItem> findOrderItemsByCreate_ItemtimeBetween();
 }

@@ -36,4 +36,7 @@ public interface OrderService {
     public List<OrderItem> getUserOrderItem(String username);
 
     public JSONArray getUserOrderItemWithBook(String username);
+
+
+    public JSONArray getUserOrder(String username);
 }

@@ -181,7 +181,7 @@ public class orderControl {
 
         //        System.out.println("请求获得所有的订单");
 //        return orderService
-        return null;
+        return orderService.getUserOrder(username);
     }
 
 

@@ -178,6 +178,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     public List<OrderItem> getAllOrderItem(){
+
         return orderItemDao.getAllOrderItem();
     }
 
@@ -201,8 +202,32 @@ public class OrderServiceImp implements OrderService {
     }
 
 
-    public List<Order> getUserOrder(String username){
-        return orderDao.getUserOrder(username);
+    public JSONArray getUserOrder(String username){
+
+        JSONArray respData = new JSONArray();
+
+        List<Order> allOrder = orderDao.getUserOrder(username);
+
+        for(Order order : allOrder){
+            JSONObject obj = JSONObject.fromObject(order);
+            List<OrderItem> childItemGroup = order.getChileItem();
+
+            JSONArray childJSON = new JSONArray().fromObject(childItemGroup);
+
+            for(int i=0;i<childItemGroup.size();i++){
+                int bookID = childItemGroup.get(i).getBookID();
+                Book tmpbook = bookDao.getOneBookByID(bookID);
+                JSONObject oneItemInchildJSON = childJSON.getJSONObject(i);
+                oneItemInchildJSON.put("booktitle", tmpbook.getDisplaytitle());
+                oneItemInchildJSON.put("bookurl", tmpbook.getImgtitle());
+                childJSON.set(i,oneItemInchildJSON);
+            }
+
+            obj.put("chileItem",childJSON);
+            respData.add(obj);
+        }
+
+        return respData;
     }
 
     public JSONArray getUserOrderItemWithBook(String username){
