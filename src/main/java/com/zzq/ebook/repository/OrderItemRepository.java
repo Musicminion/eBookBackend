@@ -30,6 +30,37 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Integer> {
             "group by belonguser")
     JSONArray userConsumeStatistic(@Param(value = "starttime") Date starttime, @Param(value = "endtime") Date endtime);
 
+    @Query(value = "select bookID,sum(buynum) from OrderItem " +
+            "where status =2 and create_Itemtime >= :starttime and create_Itemtime <= :endtime " +
+            "group by bookID")
+    JSONArray bookSellnumStatistic(@Param(value = "starttime") Date starttime, @Param(value = "endtime") Date endtime);
+
+
+    @Query(value = "select bookID,sum(buynum) from OrderItem " +
+            "where belonguser = :username and status =2 and create_Itemtime >= :starttime and create_Itemtime <= :endtime " +
+            "group by bookID")
+    JSONArray userSelfStatistic_BookWithBuyNum
+            (@Param(value = "starttime") Date starttime,
+             @Param(value = "endtime") Date endtime,
+             @Param("username") String username);
+
+    @Query(value = "select sum(buynum) from OrderItem " +
+            "where belonguser = :username and status =2 and create_Itemtime >= :starttime and create_Itemtime <= :endtime " +
+            "group by belonguser")
+    JSONArray userSelfStatistic_BookAllBuyNum
+            (@Param(value = "starttime") Date starttime,
+             @Param(value = "endtime") Date endtime,
+             @Param("username") String username);
+
+
+    @Query(value = "select sum(payprice) from OrderItem " +
+            "where belonguser = :username and status =2 and create_Itemtime >= :starttime and create_Itemtime <= :endtime " +
+            "group by belonguser")
+    JSONArray userSelfStatistic_BookTotalPay
+            (@Param(value = "starttime") Date starttime,
+             @Param(value = "endtime") Date endtime,
+             @Param("username") String username);
+
 
 //    @Query(value = "select * from OrderItem where create_Itemtime &gt;= ?1",nativeQuery = true)
 //    JSONArray tset(String test);

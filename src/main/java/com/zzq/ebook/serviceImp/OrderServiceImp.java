@@ -88,6 +88,7 @@ public class OrderServiceImp implements OrderService {
 
         if(refreshedBuynum ==0){
             tmpitem.setStatus(-1);
+            tmpitem.setOrderID(1);
         }
         orderItemDao.saveOneOrderItem(tmpitem);
         return 0;

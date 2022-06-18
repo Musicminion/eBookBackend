@@ -5,6 +5,7 @@ import com.zzq.ebook.dao.OrderItemDao;
 import com.zzq.ebook.entity.OrderItem;
 import com.zzq.ebook.entity.User;
 import com.zzq.ebook.repository.OrderItemRepository;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -47,4 +48,29 @@ public class OrderItemImp implements OrderItemDao {
     public List<OrderItem> getUserOrderItem(String username){
         return orderItemRepository.findOrderItemsByBelonguser(username);
     }
+
+    @Override
+    public JSONArray userConsumeStatistic(Date starttime, Date endtime){
+        return orderItemRepository.userConsumeStatistic(starttime,endtime);
+    }
+
+    @Override
+    public JSONArray bookSellnumStatistic(Date starttime, Date endtime){
+        return orderItemRepository.bookSellnumStatistic(starttime,endtime);
+    }
+
+    @Override
+    public JSONArray userSelfStatistic_BookWithBuyNum(Date starttime, Date endtime, String username){
+        return orderItemRepository.userSelfStatistic_BookWithBuyNum(starttime,endtime,username);
+    };
+    @Override
+    public JSONArray userSelfStatistic_BookAllBuyNum(Date starttime, Date endtime, String username){
+        return orderItemRepository.userSelfStatistic_BookAllBuyNum(starttime,endtime,username);
+    };
+
+    @Override
+    public JSONArray userSelfStatistic_BookTotalPay(Date starttime, Date endtime, String username){
+        return orderItemRepository.userSelfStatistic_BookTotalPay(starttime,endtime,username);
+    };
+
 }
