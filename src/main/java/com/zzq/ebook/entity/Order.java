@@ -65,7 +65,7 @@ public class Order {
     public void setReceivername(String receivername) {this.receivername = receivername;}
 
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderID")
     private List<OrderItem> chileItem;
 

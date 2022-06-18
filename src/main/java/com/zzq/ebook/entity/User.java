@@ -70,7 +70,7 @@ public class User {
     }
 
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "belonguser")
     private List<OrderItem> childOrderItem;
 
