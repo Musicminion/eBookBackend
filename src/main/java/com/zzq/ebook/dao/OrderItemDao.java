@@ -26,7 +26,6 @@ public interface OrderItemDao {
     JSONArray bookSellnumStatistic(Date starttime, Date endtime);
 
 
-
     JSONArray userSelfStatistic_BookWithBuyNum(Date starttime, Date endtime, String username);
 
     JSONArray userSelfStatistic_BookAllBuyNum(Date starttime, Date endtime, String username);
