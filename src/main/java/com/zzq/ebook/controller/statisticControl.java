@@ -29,11 +29,11 @@ public class statisticControl {
 
 
 //   测试用的
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private OrderItemRepository orderItemRepository;
+//    @Autowired
+//    private OrderRepository orderRepository;
+//
+//    @Autowired
+//    private OrderItemRepository orderItemRepository;
 
     @RequestMapping("/statistic/userConsume")
     public JSONArray userConsumeData(@RequestBody Map<String, String> params) throws ParseException {
@@ -187,16 +187,17 @@ public class statisticControl {
 
     @RequestMapping("/statistic/test")
     public List<Order> test() throws ParseException {
-        String startstr = "1000-01-01 00:00:00";
-        String endstr = "9999-12-31 12:59:59";
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date datastart = sdf1.parse(startstr);
-        Date dataend = sdf1.parse(endstr);
-
-
-        String user = "user2";
-//        return null;
-        return orderItemRepository.userSelfStatistic_BookTotalPay(datastart,dataend,user);
+        return null;
+//        String startstr = "1000-01-01 00:00:00";
+//        String endstr = "9999-12-31 12:59:59";
+//        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Date datastart = sdf1.parse(startstr);
+//        Date dataend = sdf1.parse(endstr);
+//
+//
+//        String user = "user2";
+////        return null;
+//        return orderItemRepository.userSelfStatistic_BookTotalPay(datastart,dataend,user);
     }
 
 
