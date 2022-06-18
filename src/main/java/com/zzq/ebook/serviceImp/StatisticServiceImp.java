@@ -51,7 +51,22 @@ public class StatisticServiceImp implements StatisticService {
 
 
     public JSONArray userSelfStatistic_BookWithBuyNum(Date starttime, Date endtime, String username){
-        return orderItemDao.userSelfStatistic_BookWithBuyNum(starttime, endtime,username);
+        JSONArray BookWithBuyNumData = orderItemDao.userSelfStatistic_BookWithBuyNum(starttime, endtime,username);
+
+        for(int i=0;i<BookWithBuyNumData.size();i++){
+            JSONArray RowData = BookWithBuyNumData.getJSONArray(i);
+
+            String bookID = RowData.getString(0);
+            Book tmpBook = bookDao.getOneBookByID(Integer.parseInt(bookID));
+
+            if(tmpBook!=null){
+                RowData.add(2,tmpBook.getBookname());
+                RowData.add(3,tmpBook.getImgtitle());
+            }
+            BookWithBuyNumData.set(i,RowData);
+        }
+
+        return BookWithBuyNumData;
     };
 
     public JSONArray userSelfStatistic_BookAllBuyNum(Date starttime, Date endtime, String username){
