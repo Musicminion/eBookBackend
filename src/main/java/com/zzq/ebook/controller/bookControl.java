@@ -2,6 +2,7 @@ package com.zzq.ebook.controller;
 
 import com.zzq.ebook.constant.constant;
 import com.zzq.ebook.entity.Book;
+import com.zzq.ebook.privateKey.keyInfo;
 import com.zzq.ebook.service.BookService;
 import com.zzq.ebook.utils.message.Msg;
 import com.zzq.ebook.utils.message.MsgCode;
@@ -11,19 +12,13 @@ import net.sf.json.JSONObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.security.SignatureException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
+import java.security.SignatureException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-
-import com.zzq.ebook.privateKey.keyInfo;
-
-import com.aliyun.oss.OSSClient;
 // 接口说明：
 
 
@@ -40,7 +35,6 @@ public class bookControl {
         }
         return null;
     }
-
 
     @RequestMapping("/queryBook/All")
     public List<Book> getAllBook(@RequestBody Map<String, String> params){

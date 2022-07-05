@@ -185,17 +185,13 @@ public class orderControl {
     }
 
 
+
+
 //  测试的接口
     @RequestMapping("/test")
     public JSONArray testFunction(){
         System.out.println("测试开始！！！！！！！！！！");
 
-
-
-        //        System.out.println(order.getChileItem().size());
-        //        JSONObject obj = JSONObject.fromObject(order.getChileItem());
-        //        System.out.println(obj);
-        //        return orderService;
         return orderService.getAllOrder();
     }
 }

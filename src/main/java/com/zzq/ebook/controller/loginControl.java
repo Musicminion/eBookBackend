@@ -88,19 +88,18 @@ public class loginControl {
 
     @RequestMapping("/register")
     public Msg register(@RequestBody Map<String, String> params){
-//agreement: true
-//confirm: "1231231"
-//email: "zhangziqian@sjtu.edu.cn"
-//location: "123123123"
-//password: "1231231"
-//phone: "18062765851"
-//username: "123123123"
+        //agreement: true
+        //confirm: "1231231"
+        //email: "zhangziqian@sjtu.edu.cn"
+        //location: "123123123"
+        //password: "1231231"
+        //phone: "18062765851"
+        //username: "123123123"
         String username = params.get(constant.USERNAME);
         String email = params.get(constant.EMAIL);
         String location = params.get("location");
         String password = params.get(constant.PASSWORD);
         String phone = params.get("phone");
-
 
 
         return null;
