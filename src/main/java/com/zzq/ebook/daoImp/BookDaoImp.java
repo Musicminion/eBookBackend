@@ -5,6 +5,7 @@ import com.zzq.ebook.dao.BookDao;
 import com.zzq.ebook.entity.Book;
 import com.zzq.ebook.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,5 +33,42 @@ public class BookDaoImp implements BookDao {
     @Override
     public void deleteOneBookByID(Integer id){
         bookRepository.deleteById(id);
+    }
+
+    // 函数用途：接收整数 limit 参数，获取销量前 limit 的书籍 用途
+    // 使用场景：主页的获取推荐书籍
+    @Override
+    public List<Book> getTopSellBooks(int limit){
+        return bookRepository.findAllByOrderBySellnumberDesc(PageRequest.of(0, limit));
+    };
+
+    // 函数用途：接收字符串参数，然后到数据库里面去查找书籍
+    // 使用场景：搜素书籍，搜索方式是根据作者名字
+    @Override
+    public List<Book> findBooksByAuthorLike(String author){
+        return bookRepository.findBooksByAuthorLike(author);
+    }
+
+    // 函数用途：接收字符串参数，然后到数据库里面去查找书籍
+    // 使用场景：搜素书籍，搜索方式是根据出版社名字
+    @Override
+    public List<Book> findBooksByPublisherLike(String publisher){
+        return bookRepository.findBooksByPublisherLike(publisher);
+    }
+
+    // 函数用途：接收字符串参数，然后到数据库里面去查找书籍
+    // 使用场景：搜素书籍，搜索方式是根据展示的标题名字
+    @Override
+    public List<Book> findBooksByDisplaytitleLike(String displaytitle){
+        return bookRepository.findBooksByDisplaytitleIsLike(displaytitle);
+    }
+
+    // 函数用途：接收字符串参数，然后到数据库里面去查找书籍
+    // 使用场景：搜素书籍，搜索方式是以上三种的综合
+    @Override
+    public List<Book> findBooksGlobal(String keyword){
+        return bookRepository.findBooksByAuthorLikeOrPublisherLikeOrDisplaytitleLike(
+            keyword,keyword,keyword
+        );
     }
 }

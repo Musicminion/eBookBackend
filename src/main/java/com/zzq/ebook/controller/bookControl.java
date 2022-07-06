@@ -38,29 +38,16 @@ public class bookControl {
     }
 
     @GetMapping(value = "/queryMainPageBooks")
-    public List<Book> getBook(){
-        List<Book> result = new ArrayList<Book>();
-        result.add(bookService.getBookByID(1));
-        result.add(bookService.getBookByID(2));
-        result.add(bookService.getBookByID(3));
-        result.add(bookService.getBookByID(4));
-        result.add(bookService.getBookByID(5));
-        result.add(bookService.getBookByID(6));
-        result.add(bookService.getBookByID(1));
-        result.add(bookService.getBookByID(2));
-        result.add(bookService.getBookByID(3));
-        result.add(bookService.getBookByID(4));
-        result.add(bookService.getBookByID(5));
-        result.add(bookService.getBookByID(6));
-        result.add(bookService.getBookByID(1));
-        result.add(bookService.getBookByID(2));
-        result.add(bookService.getBookByID(3));
-        result.add(bookService.getBookByID(4));
-        result.add(bookService.getBookByID(5));
-        result.add(bookService.getBookByID(6));
-        return result;
+    public List<Book> getMainPageBook(){
+        return bookService.getRecommendBooks();
     }
 
+    @GetMapping(value = "/queryBooksSearch/{searchType}/{keyword}")
+    public List<Book> searchBooks(@PathVariable("searchType") int type,
+                                  @PathVariable("keyword") String keyword){
+
+        return bookService.getSearchedBooks(type,keyword);
+    }
 
 
     @RequestMapping("/queryBook/All")
