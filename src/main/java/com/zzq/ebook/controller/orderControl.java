@@ -36,6 +36,7 @@ public class orderControl {
 
         // 拒绝非法的用户添加购物车到他人用户
         JSONObject auth = SessionUtil.getAuth();
+        assert auth != null;
         if(!Objects.equals((String) auth.get(constant.USERNAME), username)){
             return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
         }

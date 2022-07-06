@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,6 +36,32 @@ public class bookControl {
         }
         return null;
     }
+
+    @GetMapping(value = "/queryMainPageBooks")
+    public List<Book> getBook(){
+        List<Book> result = new ArrayList<Book>();
+        result.add(bookService.getBookByID(1));
+        result.add(bookService.getBookByID(2));
+        result.add(bookService.getBookByID(3));
+        result.add(bookService.getBookByID(4));
+        result.add(bookService.getBookByID(5));
+        result.add(bookService.getBookByID(6));
+        result.add(bookService.getBookByID(1));
+        result.add(bookService.getBookByID(2));
+        result.add(bookService.getBookByID(3));
+        result.add(bookService.getBookByID(4));
+        result.add(bookService.getBookByID(5));
+        result.add(bookService.getBookByID(6));
+        result.add(bookService.getBookByID(1));
+        result.add(bookService.getBookByID(2));
+        result.add(bookService.getBookByID(3));
+        result.add(bookService.getBookByID(4));
+        result.add(bookService.getBookByID(5));
+        result.add(bookService.getBookByID(6));
+        return result;
+    }
+
+
 
     @RequestMapping("/queryBook/All")
     public List<Book> getAllBook(@RequestBody Map<String, String> params){

@@ -46,9 +46,6 @@ public class userControl {
         // 拒绝非法的用户获取用户的信息
         assert auth != null;
         if(!Objects.equals((String) auth.get(constant.USERNAME), username)){
-
-            System.out.println(username);
-            System.out.println((String) auth.get(constant.USERNAME));
             return null;
         }
         User user = userService.getUserByusername(username);
@@ -97,6 +94,25 @@ public class userControl {
             return null;
     }
 
+
+    // 函数用途：请求所有的用户信息列表，接收POST请求，接口返回用户的信息数据表，当然会移除密码等敏感信息
+    // 使用场景：登录页面的注册按钮，注册完成后，信息发送到这个端点
+    // 权限要求：无限制
+    @RequestMapping("/user/register")
+    public Msg register(@RequestBody Map<String, String> params){
+        String email = params.get(constant.EMAIL);
+        String location = params.get(constant.LOCATION);
+        String password = params.get(constant.PASSWORD);
+        String phone = params.get(constant.PHONE);
+        String username = params.get(constant.USERNAME);
+        String confirm = params.get(constant.CONFIRM);
+        String agreement = params.get(constant.AGREEMENT);
+        return null;
+    }
+
+
+
+
     // 函数用途：修改用户的登录许可，接收POST请求，接口返回修改的结果是否成功
     // 使用场景：管理员 用户管理页面的表格，管理员设置用户是否允许登录
     // 权限要求：管理员（权限号-0）
@@ -109,15 +125,10 @@ public class userControl {
         JSONObject auth = SessionUtil.getAuth();
         // 检查是全局管理员，才允许设置
         if(auth != null && Objects.equals(auth.get(constant.PRIVILEGE),0)){
-
             String setObjUsername = params.get(constant.SET_OBJ_USERNAME);
             String setObjPermitState = params.get(constant.SET_OBJ_PERMITSTATE);
             int setObjPermitStateVal = Integer.parseInt(setObjPermitState);
-            System.out.println(setObjUsername);
-            System.out.println(setObjPermitState);
-            System.out.println(setObjPermitStateVal);
             userService.setUserLoginPermit(setObjUsername,setObjPermitStateVal);
-
 
             // 自己修改自己的登录状态，会被拒绝 这在逻辑上也是不好的一个操作
             if(Objects.equals(auth.get(constant.USERNAME),setObjUsername))

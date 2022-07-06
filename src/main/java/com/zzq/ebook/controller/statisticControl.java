@@ -40,7 +40,7 @@ public class statisticControl {
     @Autowired
     private StatisticService statisticService;
 
-    // 函数用途：统计用户的消费数据，如果请求的时候说明了开始和终止日期，就按照设定，否则就是所有时间段
+    // 函数用途：统计![所有]!用户的消费数据，如果请求的时候说明了开始和终止日期，就按照设定，否则就是所有时间段
     //         返回的格式是数组，以 [用户：消费金额] 的形式呈现
     // 使用场景：管理员 统计用户的消费数据
     // 权限要求：管理员（权限号-0）
@@ -49,12 +49,9 @@ public class statisticControl {
         if(params.get("startDate")!=null && params.get("endDate")!=null){
             String startstr = params.get("startDate");
             String endstr = params.get("endDate");
-
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
-
             return statisticService.userConsumeStatistic(datastart,dataend);
         }
 
@@ -68,35 +65,29 @@ public class statisticControl {
         }
     }
 
-
+    // 函数用途：统计![所有]!用户的购买书籍的数量，如果请求的时候说明了开始和终止日期，就按照设定，否则就是所有时间段
+    //         返回的格式是数组，以 [用户：买的书籍本数] 的形式呈现
+    // 使用场景：管理员 统计用户的购买书籍的数量
+    // 权限要求：管理员（权限号-0）
     @RequestMapping("/statistic/bookSellnum")
     public JSONArray bookSellnum(@RequestBody Map<String, String> params) throws ParseException {
         if(params.get("startDate")!=null && params.get("endDate")!=null){
             String startstr = params.get("startDate");
             String endstr = params.get("endDate");
-
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
-
             return statisticService.bookSellnumStatistic(datastart,dataend);
         }
-
         else{
-
             String startstr = "1000-01-01 00:00:00";
             String endstr = "9999-12-31 12:59:59";
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
-
             return statisticService.bookSellnumStatistic(datastart,dataend);
         }
-
     }
-
-
 
 
     @RequestMapping("/statistic/userStatistic/bookTotalPay")
@@ -167,9 +158,7 @@ public class statisticControl {
         if(params.get("startDate")!=null && params.get("endDate")!=null){
             String startstr = params.get("startDate");
             String endstr = params.get("endDate");
-
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
 

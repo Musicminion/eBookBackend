@@ -4,6 +4,5 @@ package com.zzq.ebook.privateKey;
 // 源文件名称 keyinfo.java
 
 public class keyInfoexample {
-    public static final String accessId = "阿里云accessId ";
-    public static final String picKey = "阿里云 key ";
+    public static final String accessKey = "[阿里云accessKey!]";
 }
