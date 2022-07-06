@@ -25,16 +25,16 @@ public class MsgUtil {
 
     public static final String ADD_TO_SHOPCART_SUCCESS = "添加到购物车成功！";
     public static final String ADD_TOO_MUCH_TO_SHOPCART = "请求加入的购物车数量过多，超出容量";
-
     public static final String EDIT_SHOPCART_FAIL = "编辑购物车信息失败";
     public static final String EDIT_SHOPCART_SUCCESS = "编辑购物车信息成功";
-
     public static final String QUERY_BookID_NOT_EXIST = "本书不存在，请选择其他图书";
-
     public static final String USERNAME_REPETE = "用户名重复，请重新输入用户名";
-
     public static final String SET_LOGIN_PERMISSION_SUCCESS = "设置用户登录许可成功！";
     public static final String SET_LOGIN_PERMISSION_FAIL = "设置用户登录许可失败！";
+
+    public static final String REGISTER_FAIL_NOT_CONSISTENT_PWD = "密码两次输入的不一致";
+    public static final String REGISTER_FAIL_USERNAME_EXIT = "用户名已经存在";
+    public static final String REGISTER_FAIL_OTHER = "其他某种原因注册出错";
 
     public static Msg makeMsg(MsgCode code, JSONObject data){
         return new Msg(code, data);

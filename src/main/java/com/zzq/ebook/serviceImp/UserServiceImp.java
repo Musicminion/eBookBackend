@@ -48,6 +48,16 @@ public class UserServiceImp implements UserService {
             System.out.println("没有获取到用户实体");
             return false;
         }
+    }
+    @Override
+    public int registerUser(String email,String location,String password,String phone,
+                            String username, String confirm,String agreement){
 
+
+
+
+
+
+        return 0;
     }
 }
