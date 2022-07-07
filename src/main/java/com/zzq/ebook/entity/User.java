@@ -69,6 +69,9 @@ public class User {
         this.useraddress = useraddress;
     }
 
+    public void setUsername(String username){
+        this.username = username;
+    }
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "belonguser")

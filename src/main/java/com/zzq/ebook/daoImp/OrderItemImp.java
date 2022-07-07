@@ -39,6 +39,11 @@ public class OrderItemImp implements OrderItemDao {
         return orderItemRepository.save(saveObj);
     }
 
+    public List<OrderItem> saveAllOrderItems(List<OrderItem> orderItems){
+        return orderItemRepository.saveAll(orderItems);
+    }
+
+
     @Override
     public List<OrderItem> getAllOrderItem(){
         return orderItemRepository.findAll();

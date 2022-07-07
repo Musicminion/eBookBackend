@@ -96,10 +96,11 @@ public class OrderServiceImp implements OrderService {
         return 0;
     }
 
+    // 下订单 来自购物车的订单
     // 订单业务逻辑，作为一组事务，提交，出现异常可以回滚
     @Transactional(rollbackFor=Exception.class)
     public int orderMakeFromShopCart(int [] bookIDGroup, int [] bookNumGroup, String username,
-            String receivename, String postcode, String phonenumber, String receiveaddress, int size){
+            String receivename, String postcode, String phonenumber, String receiveaddress, int size) throws Exception {
         // 由于购物车中的是归属于OrderItem，正式成为订单之前，需要创建一个新的 Order
         Order newOrder = new Order();
         newOrder.setBelonguser(username);
@@ -115,24 +116,29 @@ public class OrderServiceImp implements OrderService {
         int totalMoney = 0;
 
         List<Book> BufferBooks = new ArrayList<Book>();
+        List<OrderItem> BufferOrderItems = new ArrayList<OrderItem>();
+
         // 金额在后端计算，不依赖前端计算，确保安全
-        for(int i=0; i<size; i++){
+        for(int i=0; i<size; i++) {
             OrderItem oneitem = orderItemDao.checkUserOrderItemByID(username,bookIDGroup[i]);
 
-            // 取出OrderItem设置为已经支付的情况 2代表已经支付
+            // 取出 OrderItem 设置为已经支付的情况 2代表已经支付
             if(oneitem != null){
                 oneitem.setStatus(2);
                 oneitem.setOrderID(orderid);
                 totalMoney =totalMoney + oneitem.getPayprice();
-                orderItemDao.saveOneOrderItem(oneitem);
+
+                BufferOrderItems.add(oneitem);
             }
 
             // 通过前端的传来的购买书籍的ID号码，转化为一个书
             Book book = bookDao.getOneBookByID(bookIDGroup[i]);
             // 购买数量后端再校验一次，保证不会出现库存减法之后变成了负数的情况
             int reaminNum = book.getInventory() - bookNumGroup[i];
-            if(reaminNum < 0)
-                return -1;
+            if(reaminNum < 0){
+                throw new Exception("库存不够");
+            }
+
             // 设置新的库存结果
             book.setInventory(reaminNum);
 
@@ -142,22 +148,58 @@ public class OrderServiceImp implements OrderService {
 
             // 放入缓冲区域
             BufferBooks.add(book);
-
-//            bookDao.saveOneBook(book);
         }
-        
+
+        // 所有的没有异常，开始写入数据！
         if(orderid >=0 ){
             Order justNowOrder = orderDao.getOrderByID(orderid);
             justNowOrder.setTotalprice(totalMoney);
             orderDao.saveOneOrder(justNowOrder);
             bookDao.saveAllBooks(BufferBooks);
+            orderItemDao.saveAllOrderItems(BufferOrderItems);
         }
-
         return 0;
     }
 
 
+    @Transactional(rollbackFor=Exception.class)
+    public int orderMakeFromDirectBuy(int [] bookIDGroup, int [] bookNumGroup, String username,
+        String receivename, String postcode, String phonenumber, String receiveaddress, int size) throws Exception {
 
+        // 书籍相关的信息 库存检查 超过库存直接返回错误
+        Book targetBook = bookDao.getOneBookByID(bookIDGroup[0]);
+        if(targetBook.getInventory() - bookNumGroup[0] <0)
+            throw new Exception("库存不够");
+
+        // 和上面是一样的道理 创建一个Order
+        Order newOrder = new Order();
+        newOrder.setBelonguser(username);
+        newOrder.setContactphone(phonenumber);
+        newOrder.setDestination(receiveaddress);
+        newOrder.setReceivername(receivename);
+        newOrder.setPostalcode(postcode);
+        Timestamp timenow = new Timestamp(System.currentTimeMillis());
+        newOrder.setCreate_time(timenow);
+
+        // 然后获取Order的ID号码
+        int orderid = orderDao.saveOneOrder(newOrder).getOrderID();
+
+        // 创建一个全新的 OrderItem 并查询书籍当前价格，写入订单
+        OrderItem oneitem = new OrderItem();
+        oneitem.setStatus(2);
+        oneitem.setBelonguser(username);
+        oneitem.setOrderID(orderid);
+        oneitem.setBookID(bookIDGroup[0]);
+        oneitem.setBuynum(bookNumGroup[0]);
+        oneitem.setPayprice(bookDao.getOneBookByID(bookIDGroup[0]).getPrice() * bookNumGroup[0]);
+        oneitem.setCreate_Itemtime(new Timestamp(System.currentTimeMillis()));
+
+        // 销量 和 库存 修改
+        targetBook.setSellnumber(targetBook.getSellnumber() + bookNumGroup[0]);
+        targetBook.setInventory(targetBook.getInventory() - bookNumGroup[0]);
+
+        return 0;
+    }
 
 
 

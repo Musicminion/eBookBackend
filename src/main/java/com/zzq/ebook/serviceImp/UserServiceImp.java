@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -52,12 +53,26 @@ public class UserServiceImp implements UserService {
     @Override
     public int registerUser(String email,String location,String password,String phone,
                             String username, String confirm,String agreement){
+        // 为了安全，后端再检查一下用户名有没有重复，重复了的话，就返回错误
+        if(userDao.getUserByusername(username) != null)
+            return -1;
+        if(!Objects.equals(password, confirm))
+            return -2;
 
+        System.out.println(agreement);
 
+        User newUser = new User();
 
+        newUser.setUsername(username);
+        newUser.setName(username);
+        newUser.setEmail(email);
+        newUser.setUseraddress(location);
+        newUser.setPassword(password);
+        newUser.setTelephone(phone);
+        newUser.setForbidlogin(0);
+        newUser.setPrivilege(2);
 
-
-
+        userDao.saveOneUser(newUser);
         return 0;
     }
 }

@@ -16,6 +16,8 @@ public interface OrderItemDao {
 
     OrderItem saveOneOrderItem(OrderItem saveObj);
 
+    List<OrderItem> saveAllOrderItems(List<OrderItem> orderItems);
+
     List<OrderItem> getAllOrderItem();
 
     List<OrderItem> getUserOrderItem(String username);

@@ -13,16 +13,8 @@ public interface OrderService {
 
     public int editOneOrderItemBUYNUMInChart(String username, int bookID, int buynum);
 
-    public int orderMakeFromShopCart(
-            int [] bookIDGroup,
-            int [] bookNumGroup,
-            String username,
-            String receivename,
-            String postcode,
-            String phonenumber,
-            String receiveaddress,
-            int size
-    );
+    public int orderMakeFromShopCart(int [] bookIDGroup, int [] bookNumGroup, String username,
+            String receivename, String postcode, String phonenumber, String receiveaddress, int size) throws Exception;
 
     public Order getOneOrder(int ID);
 

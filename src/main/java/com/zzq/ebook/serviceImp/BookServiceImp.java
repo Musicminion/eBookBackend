@@ -39,10 +39,10 @@ public class BookServiceImp implements BookService {
             case 1:
                 return bookDao.findBooksByDisplaytitleLike(keyword);
             case 2:
-                return bookDao.findBooksByAuthorLike(keyword);
+                return bookDao.findBooksByPublisherLike(keyword);
 
             case 3:
-                return bookDao.findBooksByPublisherLike(keyword);
+                return bookDao.findBooksByAuthorLike(keyword);
             default:
                 break;
         }

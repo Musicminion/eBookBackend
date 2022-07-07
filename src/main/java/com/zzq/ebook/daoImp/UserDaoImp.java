@@ -22,7 +22,7 @@ public class UserDaoImp implements UserDao {
     public User getUserByusername(String username){
         return userRepository.getOne(username);
     }
-
+    @Override
     public List<User> getAllUser(){
         return userRepository.findAll();
     }

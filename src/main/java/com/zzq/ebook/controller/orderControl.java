@@ -108,7 +108,7 @@ public class orderControl {
 
 
     @RequestMapping("/order/makeorder")
-    public Msg orderMakeFromShopCart(@RequestBody Map<String, String> params){
+    public Msg orderMakeFromShopCart(@RequestBody Map<String, String> params) throws Exception {
         int itemNum = (params.size() - 6) / 2 ;
         if(itemNum <= 0)
             return null;
