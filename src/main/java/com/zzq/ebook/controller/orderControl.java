@@ -135,17 +135,21 @@ public class orderControl {
             bookNumGroup[i-1] = val2;
         }
 
+        int result = -1;
         if(Objects.equals(orderFrom, "ShopCart")) {
-            int result = orderService.orderMakeFromShopCart(bookIDGroup,bookNumGroup,username,receivename,
+            result = orderService.orderMakeFromShopCart(bookIDGroup,bookNumGroup,username,receivename,
                     postcode, phonenumber, receiveaddress,itemNum);
 
         }
         else if(Objects.equals(orderFrom, "DirectBuy")){
-            int result = 1;
+            result = orderService.orderMakeFromDirectBuy(bookIDGroup,bookNumGroup,username,receivename,
+                    postcode, phonenumber, receiveaddress,itemNum);
         }
 
-
-        return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.SUCCESS_MSG);
+        if(result == 0)
+            return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.SUCCESS_MSG);
+        else
+            return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.ERROR_MSG);
     }
 
 

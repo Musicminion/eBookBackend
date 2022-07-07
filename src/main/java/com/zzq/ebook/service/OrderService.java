@@ -16,6 +16,11 @@ public interface OrderService {
     public int orderMakeFromShopCart(int [] bookIDGroup, int [] bookNumGroup, String username,
             String receivename, String postcode, String phonenumber, String receiveaddress, int size) throws Exception;
 
+    public int orderMakeFromDirectBuy(int [] bookIDGroup, int [] bookNumGroup, String username,
+            String receivename, String postcode, String phonenumber, String receiveaddress, int size) throws Exception;
+
+
+
     public Order getOneOrder(int ID);
 
     public JSONArray getAllOrder();

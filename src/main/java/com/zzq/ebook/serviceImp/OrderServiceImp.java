@@ -178,8 +178,9 @@ public class OrderServiceImp implements OrderService {
         newOrder.setDestination(receiveaddress);
         newOrder.setReceivername(receivename);
         newOrder.setPostalcode(postcode);
-        Timestamp timenow = new Timestamp(System.currentTimeMillis());
-        newOrder.setCreate_time(timenow);
+        newOrder.setCreate_time(new Timestamp(System.currentTimeMillis()));
+        // 设置总价
+        newOrder.setTotalprice(targetBook.getPrice() * bookNumGroup[0]);
 
         // 然后获取Order的ID号码
         int orderid = orderDao.saveOneOrder(newOrder).getOrderID();
@@ -197,6 +198,12 @@ public class OrderServiceImp implements OrderService {
         // 销量 和 库存 修改
         targetBook.setSellnumber(targetBook.getSellnumber() + bookNumGroup[0]);
         targetBook.setInventory(targetBook.getInventory() - bookNumGroup[0]);
+
+        if(orderid >=0 ){
+            bookDao.saveOneBook(targetBook);
+            orderDao.saveOneOrder(newOrder);
+            orderItemDao.saveOneOrderItem(oneitem);
+        }
 
         return 0;
     }

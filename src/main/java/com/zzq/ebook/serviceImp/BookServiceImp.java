@@ -3,11 +3,18 @@ package com.zzq.ebook.serviceImp;
 import com.zzq.ebook.dao.BookDao;
 import com.zzq.ebook.entity.Book;
 import com.zzq.ebook.service.BookService;
+import com.zzq.ebook.utils.message.Msg;
+import com.zzq.ebook.utils.message.MsgCode;
+import com.zzq.ebook.utils.message.MsgUtil;
 import net.sf.json.JSONObject;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zzq.ebook.constant.constant;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,8 +53,8 @@ public class BookServiceImp implements BookService {
             default:
                 break;
         }
-        return null;
 
+        return null;
     }
 
 
@@ -75,6 +82,7 @@ public class BookServiceImp implements BookService {
     public Book editOneBook(JSONObject bookinfo){
         int bookID = Integer.parseInt(bookinfo.getString(constant.BOOKID));
         Book targetBook = bookDao.getOneBookByID(bookID);
+
         if(targetBook==null)
             return null;
         else{
@@ -104,4 +112,30 @@ public class BookServiceImp implements BookService {
         bookDao.deleteOneBookByID(bookid);
     }
 
+
+    public Msg getUploadSignature(String data, String key, String HMAC_SHA1_ALGORITHM){
+        try {
+
+            SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), HMAC_SHA1_ALGORITHM);
+
+            // get an hmac_sha1 Mac instance and initialize with the signing key
+            Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
+            mac.init(signingKey);
+
+            // calculate the hmac on input data bytes
+            byte[] rawHmac = mac.doFinal(data.getBytes());
+            String result = Base64.encodeBase64String(rawHmac);
+
+            JSONObject respData = new JSONObject();
+            respData.put(constant.SIGNATURE,result);
+            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.SUCCESS_MSG, respData);
+
+        } catch (Exception e) {
+            try {
+                throw new SignatureException("Failed to generate HMAC:" + e.getMessage());
+            } catch (SignatureException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
 }

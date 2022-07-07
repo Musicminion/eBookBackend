@@ -10,6 +10,7 @@ public interface UserService {
     // 通用功能 普通用户功能等
     // 检查用户的用户名密码
     public User checkUser(String username, String password);
+    public Msg loginUserCheck(String username, String password);
 
     // 检查用户是否存在
     public boolean checkUserIfExist(String username);

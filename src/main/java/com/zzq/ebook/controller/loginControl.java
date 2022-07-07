@@ -36,32 +36,10 @@ public class loginControl {
 
     @RequestMapping("/login")
     public Msg login(@RequestBody Map<String, String> params){
-
+        // 解析参数
         String username = params.get(constant.USERNAME);
         String password = params.get(constant.PASSWORD);
-
-        User user = userService.checkUser(username,password);
-
-        if(user != null){
-            // 检测用户账户禁用，禁用账户直接不允许登录，给出提示
-            if(user.getForbidlogin() == 1)
-                return MsgUtil.makeMsg(MsgCode.LOGIN_USER_ERROR, MsgUtil.LOGIN_FAIL_ACCOUNT_FORBIDDEN);
-
-            // 账户允许登录
-            JSONObject obj = new JSONObject();
-            obj.put(constant.USERNAME, user.getUsername());
-            obj.put(constant.PRIVILEGE, user.getPrivilege());
-            SessionUtil.setSession(obj);
-
-            JSONObject data = JSONObject.fromObject(user);
-            data.remove(constant.PASSWORD);
-
-            // 登录成功
-            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
-        }
-
-        // 登录失败
-        return MsgUtil.makeMsg(MsgCode.LOGIN_USER_ERROR);
+        return userService.loginUserCheck(username,password);
     }
 
     @RequestMapping("/logout")
@@ -85,18 +63,5 @@ public class loginControl {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, auth);
         }
     }
-
-    //agreement: true
-    //confirm: "1231231"
-    //email: "zhangziqian@sjtu.edu.cn"
-    //location: "123123123"
-    //password: "1231231"
-    //phone: "18062765851"
-    //username: "123123123"
-
-
-
-
-
 
 }
