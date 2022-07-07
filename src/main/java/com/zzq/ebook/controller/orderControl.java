@@ -107,7 +107,7 @@ public class orderControl {
     //        receiveaddress:orderInfo.receiveaddress,
 
 
-    @RequestMapping("/order/makeorder/shopcart")
+    @RequestMapping("/order/makeorder")
     public Msg orderMakeFromShopCart(@RequestBody Map<String, String> params){
         int itemNum = (params.size() - 6) / 2 ;
         if(itemNum <= 0)
@@ -135,21 +135,19 @@ public class orderControl {
             bookNumGroup[i-1] = val2;
         }
 
-        int result = orderService.orderMakeFromShopCart(bookIDGroup,bookNumGroup,username,receivename,
-                postcode, phonenumber, receiveaddress,itemNum);
+        if(Objects.equals(orderFrom, "ShopCart")) {
+            int result = orderService.orderMakeFromShopCart(bookIDGroup,bookNumGroup,username,receivename,
+                    postcode, phonenumber, receiveaddress,itemNum);
 
-        return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.EDIT_SHOPCART_SUCCESS);
+        }
+        else if(Objects.equals(orderFrom, "DirectBuy")){
+            int result = 1;
+        }
+
+
+        return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.SUCCESS_MSG);
     }
 
-
-    @RequestMapping("/order/buyOneImmediately")
-    public Msg buyOneImmediately(@RequestBody Map<String, String> params){
-        // 首先，获取必要参数，用户名、收件人、联系电话、邮政编码、收件地址、购买书本的ID、购买书籍的数量、购买时的价格
-        JSONObject obj = new JSONObject();
-
-
-        return null;
-    }
 
     @RequestMapping("/order/getAllOrderItem")
     public JSONArray getAllOrderItem(){

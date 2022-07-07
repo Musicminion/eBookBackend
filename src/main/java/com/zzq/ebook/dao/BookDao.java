@@ -13,5 +13,6 @@ public interface BookDao {
     List<Book> findBooksGlobal(String keyword);
     void deleteOneBookByID(Integer id);
     Book saveOneBook(Book newoneBook);
+    List<Book> saveAllBooks(List<Book> allBooks);
 
 }

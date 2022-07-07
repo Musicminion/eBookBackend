@@ -13,8 +13,10 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -94,27 +96,30 @@ public class OrderServiceImp implements OrderService {
         return 0;
     }
 
-
+    // 订单业务逻辑，作为一组事务，提交，出现异常可以回滚
+    @Transactional(rollbackFor=Exception.class)
     public int orderMakeFromShopCart(int [] bookIDGroup, int [] bookNumGroup, String username,
             String receivename, String postcode, String phonenumber, String receiveaddress, int size){
+        // 由于购物车中的是归属于OrderItem，正式成为订单之前，需要创建一个新的 Order
         Order newOrder = new Order();
         newOrder.setBelonguser(username);
         newOrder.setContactphone(phonenumber);
         newOrder.setDestination(receiveaddress);
         newOrder.setReceivername(receivename);
         newOrder.setPostalcode(postcode);
-
         Timestamp timenow = new Timestamp(System.currentTimeMillis());
         newOrder.setCreate_time(timenow);
 
+        // 获取Order的ID号码
         int orderid = orderDao.saveOneOrder(newOrder).getOrderID();
-
-        System.out.println(orderid);
-
         int totalMoney = 0;
 
+        List<Book> BufferBooks = new ArrayList<Book>();
+        // 金额在后端计算，不依赖前端计算，确保安全
         for(int i=0; i<size; i++){
             OrderItem oneitem = orderItemDao.checkUserOrderItemByID(username,bookIDGroup[i]);
+
+            // 取出OrderItem设置为已经支付的情况 2代表已经支付
             if(oneitem != null){
                 oneitem.setStatus(2);
                 oneitem.setOrderID(orderid);
@@ -122,22 +127,39 @@ public class OrderServiceImp implements OrderService {
                 orderItemDao.saveOneOrderItem(oneitem);
             }
 
+            // 通过前端的传来的购买书籍的ID号码，转化为一个书
             Book book = bookDao.getOneBookByID(bookIDGroup[i]);
+            // 购买数量后端再校验一次，保证不会出现库存减法之后变成了负数的情况
             int reaminNum = book.getInventory() - bookNumGroup[i];
+            if(reaminNum < 0)
+                return -1;
+            // 设置新的库存结果
             book.setInventory(reaminNum);
+
+            // 销量的更新，根据用户买的数量更新
             int newSellnum = book.getSellnumber() + bookNumGroup[i];
             book.setSellnumber(newSellnum);
-            bookDao.saveOneBook(book);
-        }
 
+            // 放入缓冲区域
+            BufferBooks.add(book);
+
+//            bookDao.saveOneBook(book);
+        }
+        
         if(orderid >=0 ){
             Order justNowOrder = orderDao.getOrderByID(orderid);
             justNowOrder.setTotalprice(totalMoney);
             orderDao.saveOneOrder(justNowOrder);
+            bookDao.saveAllBooks(BufferBooks);
         }
 
-        return 1;
+        return 0;
     }
+
+
+
+
+
 
     public List<OrderItem> findAllOrderItemInCart(String username){
         return orderItemDao.queryOneUserShopCart(username);

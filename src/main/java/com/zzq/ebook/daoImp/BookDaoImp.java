@@ -71,4 +71,8 @@ public class BookDaoImp implements BookDao {
             keyword,keyword,keyword
         );
     }
+    @Override
+    public List<Book> saveAllBooks(List<Book> allBooks){
+        return bookRepository.saveAll(allBooks);
+    }
 }

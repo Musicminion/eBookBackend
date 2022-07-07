@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
-
+import java.util.List;
 
 @Entity
 @Table(name = "orderitem")
@@ -77,5 +77,17 @@ public class OrderItem {
         this.comment = comment;
     }
 
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "bookID",insertable=false,updatable=false)
+    private Book bookinfo;
+
+    public Book getBookinfo() {
+        return this.bookinfo;
+    }
+
+    public void setBookinfo(Book bookinfo) {
+        this.bookinfo = bookinfo;
+    }
 
 }

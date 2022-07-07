@@ -73,18 +73,12 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "belonguser")
     private List<OrderItem> childOrderItem;
-
     public List<OrderItem> getChildOrderItem() {
         return childOrderItem;
     }
-
     public void setChildOrderItem(List<OrderItem> childOrderItem) {
         this.childOrderItem = childOrderItem;
     }
 
-
-    //    public void setUsername(String username) {
-//        this.username = username;
-//    }
 }
 
