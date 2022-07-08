@@ -10,21 +10,6 @@ import javax.servlet.http.HttpSession;
 
 public class SessionUtil {
 
-//    public static boolean checkAuth(){
-//        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//        // Session
-//        if(requestAttributes != null) {
-//            HttpServletRequest request = requestAttributes.getRequest();
-//            HttpSession session = request.getSession(false);
-//
-//            if(session != null) {
-//                Integer userType = (Integer) session.getAttribute(constant.PRIVILEGE);
-//                return userType != null && userType <= 2;
-//            }
-//        }
-//        return false;
-//    }
-
     // Session方式检查用户的权限，返回json对象，包括的是用户名和权限信息。
     public static JSONObject getAuth(){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
