@@ -56,7 +56,5 @@ public class constant {
     public static final String LOCATION = "location";
     public static final String PHONE = "phone";
     public static final String CONFIRM = "confirm";
-
-
     public static final String AGREEMENT  ="agreement";
 }

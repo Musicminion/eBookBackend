@@ -26,14 +26,14 @@ import java.util.Objects;
 
 // 说明：statistic controller负责统计相关的请求
 // -------------------------------------接-----------口-----------表-----------------------------------------------------
-//      接口名称                                            接口说明：
+//          接口名称                                            接口说明：
 //                                                  [系 统 全 局 数 据 统 计]
-//  /statistic/userConsume                      全局数据统计：统计指定时间段 统计所有用户的消费情况
-//  /statistic/bookSellnum                      全局数据统计：统计指定时间段 统计所有书籍的销量
+//      /statistic/userConsume                      全局数据统计：统计指定时间段 统计所有用户的消费情况
+//      /statistic/bookSellnum                      全局数据统计：统计指定时间段 统计所有书籍的销量
 //                                                  [用 户 个 人 数 据 统 计]
-//  /statistic/userStatistic/bookTotalPay       用户个人数据统计：统计指定时间段 消费的金额钱数
-//  /statistic/userStatistic/bookAllBuyNum      用户个人数据统计：统计指定时间段 书买了多少本（所有订单一共买了多少本书）
-//  /statistic/userStatistic/bookWithBuyNum     用户个人数据统计：统计指定时间段 书籍以及购买数量的信息（数组）
+//      /statistic/userStatistic/bookTotalPay       用户个人数据统计：统计指定时间段 消费的金额钱数
+//      /statistic/userStatistic/bookAllBuyNum      用户个人数据统计：统计指定时间段 书买了多少本（所有订单一共买了多少本书）
+//      /statistic/userStatistic/bookWithBuyNum     用户个人数据统计：统计指定时间段 书籍以及购买数量的信息（数组）
 //  注释：如果没有传入参数，默认统计所有的时间 用户个人数据统计的用户通过session读取
 
 @RestController
