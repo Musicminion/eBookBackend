@@ -1,6 +1,7 @@
 package com.zzq.ebook.serviceImp;
 
 import com.zzq.ebook.dao.BookDao;
+import com.zzq.ebook.dao.OrderItemDao;
 import com.zzq.ebook.entity.Book;
 import com.zzq.ebook.service.BookService;
 import com.zzq.ebook.utils.message.Msg;
@@ -24,6 +25,9 @@ public class BookServiceImp implements BookService {
 
     @Autowired
     private BookDao bookDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
+
     public Book getBookByID(Integer bookID){
         return bookDao.getOneBookByID(bookID);
     }
@@ -110,9 +114,8 @@ public class BookServiceImp implements BookService {
 
     public int deleteOneBook(Integer bookid){
         // 如果这个数有订单的话，不能运行删除 返回-1
-        if(bookDao.getOneBookByID(bookid) != null)
+        if(orderItemDao.getOrderItemByBookID(bookid) != null)
             return -1;
-
         bookDao.deleteOneBookByID(bookid);
         return 0;
     }

@@ -25,10 +25,8 @@ public class OrderServiceImp implements OrderService {
 
     @Autowired
     private OrderItemDao orderItemDao;
-
     @Autowired
     private BookDao bookDao;
-
     @Autowired
     private OrderDao orderDao;
 
