@@ -14,7 +14,7 @@ public interface BookService {
     public List<Book> getSearchedBooks(int type, String keyword);
     public Book addOneBook(JSONObject bookinfo);
     public Book editOneBook(JSONObject bookinfo);
-    public void deleteOneBook(Integer bookid);
+    public int deleteOneBook(Integer bookid);
 
 
     public Msg getUploadSignature(String data,String key,String HMAC_SHA1_ALGORITHM);

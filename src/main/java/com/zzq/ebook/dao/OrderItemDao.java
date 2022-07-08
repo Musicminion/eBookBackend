@@ -22,6 +22,8 @@ public interface OrderItemDao {
 
     List<OrderItem> getUserOrderItem(String username);
 
+    OrderItem getOrderItemByBookID(int id);
+
     JSONArray userConsumeStatistic(Date starttime, Date endtime);
 
 

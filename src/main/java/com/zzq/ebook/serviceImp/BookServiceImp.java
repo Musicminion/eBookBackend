@@ -108,8 +108,13 @@ public class BookServiceImp implements BookService {
         }
     }
 
-    public void deleteOneBook(Integer bookid){
+    public int deleteOneBook(Integer bookid){
+        // 如果这个数有订单的话，不能运行删除 返回-1
+        if(bookDao.getOneBookByID(bookid) != null)
+            return -1;
+
         bookDao.deleteOneBookByID(bookid);
+        return 0;
     }
 
 

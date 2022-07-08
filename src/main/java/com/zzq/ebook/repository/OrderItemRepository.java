@@ -11,9 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem,Integer> {
-
-//    @Query(value = "from OrderItem where status =?1 and belonguser = :belonguser and bookID = :bookID")
-//    User checkIfAddBefore(@Param("belonguser") String belonguser, @Param("bookID") int bookID);
+    OrderItem findOrderItemByBookID(int id);
 
     // 已知：用户
     @Query(value = "from OrderItem where belonguser = :belonguser and status =0")

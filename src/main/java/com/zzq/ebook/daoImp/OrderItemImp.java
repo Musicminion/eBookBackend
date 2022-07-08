@@ -53,6 +53,11 @@ public class OrderItemImp implements OrderItemDao {
     public List<OrderItem> getUserOrderItem(String username){
         return orderItemRepository.findOrderItemsByBelonguser(username);
     }
+    @Override
+    public OrderItem getOrderItemByBookID(int id){
+        return orderItemRepository.findOrderItemByBookID(id);
+    }
+
 
     @Override
     public JSONArray userConsumeStatistic(Date starttime, Date endtime){
