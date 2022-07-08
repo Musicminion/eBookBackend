@@ -17,7 +17,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 // 接口说明：
-
+// -------------------------------------接-----------口-----------表-----------------------------------------------------
+//      接口名称                                                接口说明：
+//      /login                                      登录接口，接收POST请求，参数必须要包括username password，返回用户的完整信息。
+//      /queryBookdetail/{bookid}                   获取书籍信息的接口，接收GET请求，返回该ID的书籍信息
+//      /queryMainPageBooks                         获取主页的书籍推荐的信息，GET
+//      /queryBooksSearch/{searchType}/{keyword}    按照条件查询书籍，具体种类参考函数内容，POST
+//      /requestUploadSignature                     添加书的时候上传图片，然后获取签名，POST
+//      /addBook/addone                             添加一本书，POST
+//      /editBook                                   编辑一本书，POST
+//      /deleteBook                                 删除一本书，POST
+// ---------------------------------------------------------------------------------------------------------------------
 
 @RestController
 public class bookControl {
@@ -50,7 +60,7 @@ public class bookControl {
         return bookService.getBookAll();
     }
 
-    @RequestMapping("/addBook/requestSignature")
+    @RequestMapping("/requestUploadSignature")
     public Msg requestSignature(@RequestBody Map<String, String> params){
         JSONObject auth = SessionUtil.getAuth();
         // 检查是全局管理员，才允许获得签名
@@ -127,18 +137,3 @@ public class bookControl {
 
 
 
-
-//
-//
-//        bookinfo.put(constant.ISBN, params.get(constant.ISBN));
-//        bookinfo.put(constant.BOOKNAME, params.get(constant.BOOKNAME));
-//        bookinfo.put(constant.DISPLAYTITLE,params.get(constant.DISPLAYTITLE));
-//        bookinfo.put(constant.INVENTORY,params.get(constant.INVENTORY));
-//        bookinfo.put(constant.DEPARTURE,params.get(constant.DEPARTURE));
-//        bookinfo.put(constant.AUTHOR,params.get(constant.AUTHOR));
-//        bookinfo.put(constant.PRICE,params.get(constant.PRICE));
-//        bookinfo.put(constant.IMGTITLE,params.get(constant.IMGTITLE));
-//        bookinfo.put(constant.PUBLISHER,params.get(constant.PUBLISHER));
-//        bookinfo.put(constant.DESCRIPTION,params.get(constant.DESCRIPTION));
-//
-//        System.out.println(bookinfo);

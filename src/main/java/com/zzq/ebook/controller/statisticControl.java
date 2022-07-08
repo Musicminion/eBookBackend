@@ -6,6 +6,8 @@ import com.zzq.ebook.entity.Order;
 import com.zzq.ebook.repository.OrderItemRepository;
 import com.zzq.ebook.repository.OrderRepository;
 import com.zzq.ebook.service.StatisticService;
+import com.zzq.ebook.utils.message.MsgCode;
+import com.zzq.ebook.utils.message.MsgUtil;
 import com.zzq.ebook.utils.session.SessionUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -46,6 +48,10 @@ public class statisticControl {
     // 权限要求：管理员（权限号-0）
     @RequestMapping("/statistic/userConsume")
     public JSONArray userConsumeData(@RequestBody Map<String, String> params) throws ParseException {
+        JSONObject auth = SessionUtil.getAuth();
+        if(auth == null || !Objects.equals(auth.get(constant.PRIVILEGE),0))
+            return null;
+
         if(params.get("startDate")!=null && params.get("endDate")!=null){
             String startstr = params.get("startDate");
             String endstr = params.get("endDate");
@@ -57,7 +63,7 @@ public class statisticControl {
 
         else{
             String startstr = "1000-01-01 00:00:00";
-            String endstr = "9999-12-31 12:59:59";
+            String endstr = "9999-12-31 23:59:59";
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
@@ -71,6 +77,10 @@ public class statisticControl {
     // 权限要求：管理员（权限号-0）
     @RequestMapping("/statistic/bookSellnum")
     public JSONArray bookSellnum(@RequestBody Map<String, String> params) throws ParseException {
+        JSONObject auth = SessionUtil.getAuth();
+        if(auth == null || !Objects.equals(auth.get(constant.PRIVILEGE),0))
+            return null;
+
         if(params.get("startDate")!=null && params.get("endDate")!=null){
             String startstr = params.get("startDate");
             String endstr = params.get("endDate");
@@ -81,7 +91,7 @@ public class statisticControl {
         }
         else{
             String startstr = "1000-01-01 00:00:00";
-            String endstr = "9999-12-31 12:59:59";
+            String endstr = "9999-12-31 23:59:59";
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
@@ -89,13 +99,15 @@ public class statisticControl {
         }
     }
 
-
+    // 函数用途：统计当前用户在指定的时间段消费的金额数量，返回的格式是 [花费金额数]
+    // 使用场景：用户自己统计自己花费的金额数量
+    // 权限要求：登录的用户（权限号-2）
     @RequestMapping("/statistic/userStatistic/bookTotalPay")
     public JSONArray userBookTotalPay(@RequestBody Map<String, String> params) throws ParseException {
         JSONObject auth = SessionUtil.getAuth();
-        assert auth != null;
+        if(auth == null)
+            return null;
         String username = (String) auth.get(constant.USERNAME);
-
         if(params.get("startDate")!=null && params.get("endDate")!=null){
             String startstr = params.get("startDate");
             String endstr = params.get("endDate");
@@ -110,7 +122,7 @@ public class statisticControl {
 
         else{
             String startstr = "1000-01-01 00:00:00";
-            String endstr = "9999-12-31 12:59:59";
+            String endstr = "9999-12-31 23:59:59";
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
@@ -120,18 +132,20 @@ public class statisticControl {
 
     }
 
+    // 函数用途：统计当前用户在指定的时间段买了的书数量，返回的格式是 [买了的书数量]
+    // 使用场景：用户自己统计自己买了多少本书
+    // 权限要求：登录的用户（权限号-2）
     @RequestMapping("/statistic/userStatistic/bookAllBuyNum")
     public JSONArray userBookAllBuyNum(@RequestBody Map<String, String> params) throws ParseException {
         JSONObject auth = SessionUtil.getAuth();
-        assert auth != null;
+        if(auth == null)
+            return null;
         String username = (String) auth.get(constant.USERNAME);
 
         if(params.get("startDate")!=null && params.get("endDate")!=null){
             String startstr = params.get("startDate");
             String endstr = params.get("endDate");
-
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
 
@@ -140,7 +154,7 @@ public class statisticControl {
 
         else{
             String startstr = "1000-01-01 00:00:00";
-            String endstr = "9999-12-31 12:59:59";
+            String endstr = "9999-12-31 23:59:59";
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
@@ -149,10 +163,15 @@ public class statisticControl {
         }
     }
 
+
+    // 函数用途：统计当前用户在指定的时间段买书情况，返回的格式是，[书名：本数]
+    // 使用场景：用户自己统计自己买书情况：什么书买了多少本
+    // 权限要求：登录的用户（权限号-2）
     @RequestMapping("/statistic/userStatistic/bookWithBuyNum")
     public JSONArray userbookWithBuyNum(@RequestBody Map<String, String> params) throws ParseException {
         JSONObject auth = SessionUtil.getAuth();
-        assert auth != null;
+        if(auth == null)
+            return null;
         String username = (String) auth.get(constant.USERNAME);
 
         if(params.get("startDate")!=null && params.get("endDate")!=null){
@@ -167,7 +186,7 @@ public class statisticControl {
 
         else{
             String startstr = "1000-01-01 00:00:00";
-            String endstr = "9999-12-31 12:59:59";
+            String endstr = "9999-12-31 23:59:59";
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date datastart = sdf1.parse(startstr);
             Date dataend = sdf1.parse(endstr);
@@ -181,16 +200,6 @@ public class statisticControl {
     @RequestMapping("/statistic/test")
     public List<Order> test() throws ParseException {
         return null;
-//        String startstr = "1000-01-01 00:00:00";
-//        String endstr = "9999-12-31 12:59:59";
-//        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        Date datastart = sdf1.parse(startstr);
-//        Date dataend = sdf1.parse(endstr);
-//
-//
-//        String user = "user2";
-////        return null;
-//        return orderItemRepository.userSelfStatistic_BookTotalPay(datastart,dataend,user);
     }
 
 
