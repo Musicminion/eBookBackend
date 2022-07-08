@@ -30,11 +30,9 @@ public class orderControl {
     @Autowired
     private OrderService orderService;
 
-    //   /order/addToChart
-    //   接收参数表
-    //        username: 用户名,
-    //        bookID: 添加到购物车中，书的ID
-    //        buynum: 买的数量
+
+    // 函数用途：用户添加商品到购物车，接收参数：用户名,书的ID，买的数量
+    // 权限要求：登录用户
     @RequestMapping("/order/addToChart")
     public Msg addToChart(@RequestBody Map<String, String> params){
         String username = params.get(constant.USERNAME);
@@ -46,14 +44,16 @@ public class orderControl {
             return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
         }
 
+        // 解析参数
         String bookID = params.get(constant.BOOKID);
         String buynumStr = params.get(constant.SINGLE_ITEM_BUYNUM);
-
         int IDnum = Integer.parseInt(bookID);
         int buynum = Integer.parseInt(buynumStr);
 
+        // 交给服务层
         OrderItem resultItem = orderService.addOneOrderItemToChart(username,IDnum,buynum);
 
+        // 检查服务层的结果情况如何，正常就返回处理正常的结果，反之报错
         if(resultItem == null)
             return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.ADD_TOO_MUCH_TO_SHOPCART);
 
@@ -61,28 +61,28 @@ public class orderControl {
     }
 
 
-
-    //        接收参数表
-    //        username: user,
-    //        itemID: orderID,
-    //        refreshedbuynum: newbuynum,
+    // 函数用途：用户修改购物车商品的数量，接收参数：用户名,书的ID，买的数量
+    // 权限要求：登录用户
+    // 补充注释：如果用户删除购物车数据，那么我这里的操作是吧orderItem的状态保留为-1，原因是哪怕删除的数据，对于用户的
+    //         喜好分析是有一定的意义的，所以暂且保留了，此外，直接删除会导致订单项目的流水号不连续，这种“重要的数据”我认为需要保留
+    //         当然，能不能直接删除，当然是可以的，比较没有指向这个orderItem的引用，所以不会带来删除异常
     @RequestMapping("/order/refreshShopCartItem")
     public Msg refreshShopCartItem(@RequestBody Map<String, String> params){
         String username = params.get(constant.USERNAME);
         // 拒绝非法的用户添加购物车到他人用户
         JSONObject auth = SessionUtil.getAuth();
+        assert auth != null;
         if(!Objects.equals((String) auth.get(constant.USERNAME), username)){
             return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
         }
-
+        // 解析参数
         String bookID = params.get(constant.BOOKID);
         String buynumStr = params.get(constant.REFRESHED_BUY_NUM);
         int IDnum = Integer.parseInt(bookID);
         int buynum = Integer.parseInt(buynumStr);
 
-
+        // 检查服务层的处理结果
         int result = orderService.editOneOrderItemBUYNUMInChart(username,IDnum,buynum);
-
         if(result == 0)
             return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.EDIT_SHOPCART_SUCCESS);
 
@@ -91,7 +91,7 @@ public class orderControl {
         return null;
     }
 
-    // 功能：请求用户自己的购物车信息
+    // 函数功能：请求用户自己的购物车信息
     @RequestMapping("/order/queryMyChart")
     public List<OrderItem> queryChart(@RequestBody Map<String, String> params){
         String queryUser = params.get(constant.USERNAME);
@@ -104,73 +104,68 @@ public class orderControl {
         return orderService.findAllOrderItemInCart(queryUser);
     }
 
-    //        orderFrom : "ShopCart",
-    //        username: user,
-    //        receivename: orderInfo.receivename,
-    //        postcode:orderInfo.postcode,
-    //        phonenumber:orderInfo.phonenumber,
-    //        receiveaddress:orderInfo.receiveaddress,
-
-
+    // 函数功能：下单！
     @RequestMapping("/order/makeorder")
     public Msg orderMakeFromShopCart(@RequestBody Map<String, String> params) throws Exception {
         int itemNum = (params.size() - 6) / 2 ;
         if(itemNum <= 0)
             return null;
+        // 解析前端的请求数据，6个基本信息+后面的订单信息
         String orderFrom = params.get("orderFrom");
         String username = params.get(constant.USERNAME);
         String receivename = params.get("receivename");
         String postcode = params.get("postcode");
         String phonenumber = params.get("phonenumber");
         String receiveaddress = params.get("receiveaddress");
-
         int[] bookIDGroup = new int[itemNum];
         int[] bookNumGroup = new int[itemNum];
 
         for(int i=1; i<=itemNum; i++){
-            String bookIDGroupNum = "bookIDGroup" + i;
-            String bookNumGroupNum = "bookNumGroup" + i;
-            String val1str = params.get(bookIDGroupNum);
-            String val2str = params.get(bookNumGroupNum);
-
-            int val1 = Integer.parseInt(val1str);
-            int val2 = Integer.parseInt(val2str);
-
-            bookIDGroup[i-1] = val1;
-            bookNumGroup[i-1] = val2;
+            bookIDGroup[i-1] = Integer.parseInt(params.get("bookIDGroup" + i));
+            bookNumGroup[i-1] = Integer.parseInt(params.get("bookNumGroup" + i));
         }
 
+        // 根据购买的来源，把数组交给服务层业务函数
         int result = -1;
         if(Objects.equals(orderFrom, "ShopCart")) {
             result = orderService.orderMakeFromShopCart(bookIDGroup,bookNumGroup,username,receivename,
                     postcode, phonenumber, receiveaddress,itemNum);
-
         }
         else if(Objects.equals(orderFrom, "DirectBuy")){
             result = orderService.orderMakeFromDirectBuy(bookIDGroup,bookNumGroup,username,receivename,
                     postcode, phonenumber, receiveaddress,itemNum);
         }
 
+        // 根据结果返回
         if(result == 0)
             return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.SUCCESS_MSG);
         else
             return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.ERROR_MSG);
     }
 
-
+    // 函数用途：管理员获取所有的订单项目的数据
+    // 权限要求：管理员
     @RequestMapping("/order/getAllOrderItem")
     public JSONArray getAllOrderItem(){
+        JSONObject auth = SessionUtil.getAuth();
+        if(auth == null || !Objects.equals(auth.get(constant.PRIVILEGE),0))
+            return null;
 
         return orderService.getAllOrderItemWithBook();
     }
 
+    // 函数用途：管理员获取所有的订单数据
+    // 权限要求：管理员
     @RequestMapping("/order/getAllOrder")
     public JSONArray getAllOrder(){
-
+        JSONObject auth = SessionUtil.getAuth();
+        if(auth == null || !Objects.equals(auth.get(constant.PRIVILEGE),0))
+            return null;
         return orderService.getAllOrder();
     }
 
-    //用户个人的订单
+    // 函数用途：用户个人的订单，POST
+    // 权限要求：登录用户
     @RequestMapping("/order/getUserOrderItem")
     public JSONArray getUserOrderItem(){
         JSONObject auth = SessionUtil.getAuth();
@@ -180,22 +175,17 @@ public class orderControl {
         return orderService.getUserOrderItemWithBook(username);
     }
 
-    //用户个人的订单项目
+    // 函数用途：用户获取个人的订单项目，POST
     @RequestMapping("/order/getUserOrder")
     public JSONArray getUserOrder(){
         JSONObject auth = SessionUtil.getAuth();
         assert auth != null;
         String username = (String) auth.get(constant.USERNAME);
 
-        //        System.out.println("请求获得所有的订单");
-//        return orderService
         return orderService.getUserOrder(username);
     }
 
-
-
-
-//  测试的接口
+    //  测试的接口函数
     @RequestMapping("/test")
     public JSONArray testFunction(){
         System.out.println("测试开始！！！！！！！！！！");
