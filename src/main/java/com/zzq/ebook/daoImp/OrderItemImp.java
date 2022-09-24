@@ -8,6 +8,8 @@ import com.zzq.ebook.repository.OrderItemRepository;
 import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -20,25 +22,58 @@ public class OrderItemImp implements OrderItemDao {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
     public OrderItem addOneOrderItem(OrderItem newOrder){
-
         return orderItemRepository.save(newOrder);
     }
 
+    @Override
+    public OrderItem createOrderItem(int status, String belongUser, int orderID,
+                              int bookID, int buyNum, int payPrice, Timestamp createTime){
+
+        OrderItem orderItem = new OrderItem();
+        orderItem.setStatus(status);
+        orderItem.setBelonguser(belongUser);
+        orderItem.setOrderID(orderID);
+        orderItem.setBookID(bookID);
+        orderItem.setBuynum(buyNum);
+        orderItem.setPayprice(payPrice);
+        orderItem.setCreate_Itemtime(createTime);
+
+        return orderItemRepository.save(orderItem);
+    }
+
+
+
+    @Override
     public List<OrderItem> queryOneUserShopCart(String username){
         return orderItemRepository.findUserShopCartItem(username);
     }
 
     // 根据用户名 书籍的ID号，来获取一个OrderItem实例
+    @Override
     public OrderItem checkUserOrderItemByID(String username, int bookID){
 //        return null;
         return orderItemRepository.findUserShopCartItemOfBook(username,bookID);
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
+    public OrderItem setOrderItemStatusUsernameAndBookID(String username, int bookID,int status, int OrderID){
+        OrderItem orderItem = orderItemRepository.findUserShopCartItemOfBook(username,bookID);
+        orderItem.setStatus(status);
+        orderItem.setOrderID(OrderID);
+        return orderItemRepository.save(orderItem);
+    }
+
+
+    @Override
     public OrderItem saveOneOrderItem(OrderItem saveObj){
         return orderItemRepository.save(saveObj);
     }
 
+    @Override
     public List<OrderItem> saveAllOrderItems(List<OrderItem> orderItems){
         return orderItemRepository.saveAll(orderItems);
     }

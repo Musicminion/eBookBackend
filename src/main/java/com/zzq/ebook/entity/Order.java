@@ -26,6 +26,28 @@ public class Order {
 
     private int totalprice;
 
+    public Order(String belonguser,Timestamp create_time,String destination, String postalcode,
+                 String contactphone, String receivername){
+        this.belonguser = belonguser;
+        this.create_time = create_time;
+        this.destination = destination;
+        this.postalcode = postalcode;
+        this.contactphone = contactphone;
+        this.receivername = receivername;
+    }
+
+
+    public Order(String belonguser,Timestamp create_time,String destination, String postalcode,
+                 String contactphone, String receivername, int payPrice){
+        this.belonguser = belonguser;
+        this.create_time = create_time;
+        this.destination = destination;
+        this.postalcode = postalcode;
+        this.contactphone = contactphone;
+        this.receivername = receivername;
+        this.totalprice = payPrice;
+    }
+
 
     public void setTotalprice(int price){
         this.totalprice = price;

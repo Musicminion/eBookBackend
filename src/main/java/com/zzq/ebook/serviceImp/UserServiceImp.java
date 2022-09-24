@@ -43,7 +43,7 @@ public class UserServiceImp implements UserService {
 
             JSONObject data = JSONObject.fromObject(user);
             data.remove(constant.PASSWORD);
-
+            data.remove("childOrderItem");
             // 返回允许成功信息
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, data);
         }

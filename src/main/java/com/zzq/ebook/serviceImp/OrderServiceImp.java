@@ -12,10 +12,10 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -94,113 +94,59 @@ public class OrderServiceImp implements OrderService {
     }
 
     // 下订单 来自购物车的订单
-    // 订单业务逻辑，作为一组事务，提交，出现异常可以回滚
-    @Transactional(rollbackFor=Exception.class)
+    // 订单业务逻辑，作为一组事务，提交，出现异常可以回滚，购物车里面可能有多个购买项目，需要逐一处理
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
     public int orderMakeFromShopCart(int [] bookIDGroup, int [] bookNumGroup, String username,
             String receivename, String postcode, String phonenumber, String receiveaddress, int size) throws Exception {
-        // 由于购物车中的是归属于OrderItem，正式成为订单之前，需要创建一个新的 Order
-        Order newOrder = new Order();
-        newOrder.setBelonguser(username);
-        newOrder.setContactphone(phonenumber);
-        newOrder.setDestination(receiveaddress);
-        newOrder.setReceivername(receivename);
-        newOrder.setPostalcode(postcode);
-        Timestamp timenow = new Timestamp(System.currentTimeMillis());
-        newOrder.setCreate_time(timenow);
-
-        // 获取Order的ID号码
-        int orderid = orderDao.saveOneOrder(newOrder).getOrderID();
+        // Step 0: 准备工作,初始化订单的总金额为0
         int totalMoney = 0;
 
-        List<Book> BufferBooks = new ArrayList<Book>();
-        List<OrderItem> BufferOrderItems = new ArrayList<OrderItem>();
-
-        // 金额在后端计算，不依赖前端计算，确保安全
-        for(int i=0; i<size; i++) {
-            OrderItem oneitem = orderItemDao.checkUserOrderItemByID(username,bookIDGroup[i]);
-
-            // 取出 OrderItem 设置为已经支付的情况 2代表已经支付
-            if(oneitem != null){
-                oneitem.setStatus(2);
-                oneitem.setOrderID(orderid);
-                totalMoney =totalMoney + oneitem.getPayprice();
-
-                BufferOrderItems.add(oneitem);
+        // Step 1: [增加] 操作orderDao, 根据用户订单信息创建新订单，并且保存
+        // 说明：由于购物车中订单是用OrderItem表示的（用状态号区分是购物车的还是订单的），正式成为订单之前，
+        //      需要创建一个新Order并获取此Order的ID号码 这个Order对象不包括他的ID，因为save之后会自动自增生成，
+        //      然后我们通过获取实体，得到ID号码
+        int orderID = orderDao.createOneOrderWithMultipleOrderItems(username,new Timestamp(System.currentTimeMillis()),
+                receiveaddress,postcode,phonenumber,receivename).getOrderID();
+        
+        // Step 2 处理订单中的每一个项目：for循环处理
+        for (int i = 0; i < size; i++){
+            // Step 2-1: 操作orderItemDao，把购物车状态修改为已购买状态:2 ，返回实体获取价格
+            OrderItem oneItem = orderItemDao.setOrderItemStatusUsernameAndBookID(username,bookIDGroup[i],2,orderID);
+            if(oneItem != null){
+                totalMoney += oneItem.getPayprice();
+                // Step 2-2: 操作bookDao，修改相关的数量，扣除购买的库存，增加销量，返回的数据要包括价格，然后把总价加起来
+                bookDao.numInfoChange(bookIDGroup[i], bookNumGroup[i]);
             }
-
-            // 通过前端的传来的购买书籍的ID号码，转化为一个书
-            Book book = bookDao.getOneBookByID(bookIDGroup[i]);
-            // 购买数量后端再校验一次，保证不会出现库存减法之后变成了负数的情况
-            int reaminNum = book.getInventory() - bookNumGroup[i];
-            if(reaminNum < 0){
-                throw new Exception("库存不够");
+            else{
+                throw new Exception("用户和订单不匹配");
             }
-
-            // 设置新的库存结果
-            book.setInventory(reaminNum);
-
-            // 销量的更新，根据用户买的数量更新
-            int newSellnum = book.getSellnumber() + bookNumGroup[i];
-            book.setSellnumber(newSellnum);
-
-            // 放入缓冲区域
-            BufferBooks.add(book);
         }
-
-        // 所有的没有异常，开始写入数据！
-        if(orderid >=0 ){
-            Order justNowOrder = orderDao.getOrderByID(orderid);
-            justNowOrder.setTotalprice(totalMoney);
-            orderDao.saveOneOrder(justNowOrder);
-            bookDao.saveAllBooks(BufferBooks);
-            orderItemDao.saveAllOrderItems(BufferOrderItems);
-        }
+        
+        // Step 3: 根据刚刚的orderID，修改订单的支付价格
+        orderDao.setOrderPayPrice(orderID,totalMoney);
         return 0;
     }
 
 
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
     public int orderMakeFromDirectBuy(int [] bookIDGroup, int [] bookNumGroup, String username,
-        String receivename, String postcode, String phonenumber, String receiveaddress, int size) throws Exception {
+        String receiveName, String postcode, String phoneNumber, String receiveAddress, int size) throws Exception {
 
-        // 书籍相关的信息 库存检查 超过库存直接返回错误
+        // 就一本书的话，就获取实体，检查库存
         Book targetBook = bookDao.getOneBookByID(bookIDGroup[0]);
-        if(targetBook.getInventory() - bookNumGroup[0] <0)
-            throw new Exception("库存不够");
 
-        // 和上面是一样的道理 创建一个Order
-        Order newOrder = new Order();
-        newOrder.setBelonguser(username);
-        newOrder.setContactphone(phonenumber);
-        newOrder.setDestination(receiveaddress);
-        newOrder.setReceivername(receivename);
-        newOrder.setPostalcode(postcode);
-        newOrder.setCreate_time(new Timestamp(System.currentTimeMillis()));
-        // 设置总价
-        newOrder.setTotalprice(targetBook.getPrice() * bookNumGroup[0]);
+        // Step 1 创建订单 Order
+        int OrderID = orderDao.createOneOrderWithOneOrderItem(username,new Timestamp(System.currentTimeMillis()),
+                receiveAddress,postcode,phoneNumber,receiveName,
+                targetBook.getPrice() * bookNumGroup[0]).getOrderID();
 
-        // 然后获取Order的ID号码
-        int orderid = orderDao.saveOneOrder(newOrder).getOrderID();
+        // Step 2 创建订单项目 OrderItem
+        orderItemDao.createOrderItem(2,username,OrderID,bookIDGroup[0],bookNumGroup[0],
+                targetBook.getPrice() * bookNumGroup[0],
+                new Timestamp(System.currentTimeMillis()));
 
-        // 创建一个全新的 OrderItem 并查询书籍当前价格，写入订单
-        OrderItem oneitem = new OrderItem();
-        oneitem.setStatus(2);
-        oneitem.setBelonguser(username);
-        oneitem.setOrderID(orderid);
-        oneitem.setBookID(bookIDGroup[0]);
-        oneitem.setBuynum(bookNumGroup[0]);
-        oneitem.setPayprice(bookDao.getOneBookByID(bookIDGroup[0]).getPrice() * bookNumGroup[0]);
-        oneitem.setCreate_Itemtime(new Timestamp(System.currentTimeMillis()));
-
-        // 销量 和 库存 修改
-        targetBook.setSellnumber(targetBook.getSellnumber() + bookNumGroup[0]);
-        targetBook.setInventory(targetBook.getInventory() - bookNumGroup[0]);
-
-        if(orderid >=0 ){
-            bookDao.saveOneBook(targetBook);
-            orderDao.saveOneOrder(newOrder);
-            orderItemDao.saveOneOrderItem(oneitem);
-        }
+        // Step 3 操作库存信息
+        bookDao.numInfoChange(bookIDGroup[0], bookNumGroup[0]);
 
         return 0;
     }
@@ -314,6 +260,6 @@ public class OrderServiceImp implements OrderService {
 
         return respData;
     }
-
-
+    
+    
 }

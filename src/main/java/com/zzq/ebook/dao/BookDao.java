@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface BookDao {
     Book getOneBookByID(Integer id);
+
+    Book numInfoChange(int bookID, int buyNum) throws Exception;
     List<Book> getAllBooks();
     List<Book> getTopSellBooks(int limit);
     List<Book> findBooksByAuthorLike(String author);

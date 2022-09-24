@@ -7,6 +7,8 @@ import com.zzq.ebook.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class BookDaoImp implements BookDao {
     private BookRepository bookRepository;
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor=Exception.class)
     public Book getOneBookByID(Integer id){
         return bookRepository.getOne(id);
     }
@@ -28,6 +31,18 @@ public class BookDaoImp implements BookDao {
     @Override
     public List<Book> getAllBooks(){
         return bookRepository.findAll();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
+    public Book numInfoChange(int bookID, int buyNum) throws Exception {
+        Book book = bookRepository.getOne(bookID);
+        if(book.getInventory() < buyNum)
+            throw new Exception("购买数量超过库存！");
+        // 扣除库存，增加销量
+        book.setInventory(book.getInventory() - buyNum);
+        book.setSellnumber(book.getSellnumber() + buyNum);
+        return bookRepository.save(book);
     }
 
     @Override

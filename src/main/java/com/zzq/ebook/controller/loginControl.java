@@ -2,11 +2,14 @@ package com.zzq.ebook.controller;
 
 import com.zzq.ebook.entity.User;
 import com.zzq.ebook.service.BookService;
+import com.zzq.ebook.service.ClockService;
 import com.zzq.ebook.service.OrderService;
 import com.zzq.ebook.service.UserService;
 import com.zzq.ebook.utils.session.SessionUtil;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +18,7 @@ import com.zzq.ebook.utils.message.MsgCode;
 import com.zzq.ebook.utils.message.MsgUtil;
 import com.zzq.ebook.utils.message.Msg;
 import com.zzq.ebook.constant.constant;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Map;
 
@@ -29,25 +33,38 @@ import java.util.Map;
 
 
 @RestController
+@Scope(value = "session")
 public class loginControl {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ClockService clockService;
+
 
     @RequestMapping("/login")
     public Msg login(@RequestBody Map<String, String> params){
         // 解析参数
         String username = params.get(constant.USERNAME);
         String password = params.get(constant.PASSWORD);
-        return userService.loginUserCheck(username,password);
+        Msg tmpMsg = userService.loginUserCheck(username,password);
+        // 登录成功 发起计时器
+        if(tmpMsg!=null && tmpMsg.getStatus() >= 0) {
+            clockService.launchClock();
+            return tmpMsg;
+        }
+        return null;
     }
 
     @RequestMapping("/logout")
     public Msg logout(){
         Boolean status = SessionUtil.removeSession();
-
         if(status){
-            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGOUT_SUCCESS_MSG);
+            // 成功移除回话，终止闹钟
+            String timeIntervalInfo = clockService.endClock();
+            JSONObject data = new JSONObject();
+            data.put("timeInfo", timeIntervalInfo);
+            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGOUT_SUCCESS_MSG, data);
         }
         return MsgUtil.makeMsg(MsgCode.ERROR, MsgUtil.LOGOUT_ERR_MSG);
     }
@@ -63,5 +80,20 @@ public class loginControl {
             return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.LOGIN_SUCCESS_MSG, auth);
         }
     }
+
+
+
+    @RequestMapping("/test1")
+    public String test1() {
+        return clockService.launchClock();
+    }
+
+    @RequestMapping("/test2")
+    public String test2() {
+        return clockService.endClock();
+    }
+
+
+
 
 }
