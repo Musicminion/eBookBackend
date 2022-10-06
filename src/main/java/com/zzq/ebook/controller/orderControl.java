@@ -14,14 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.kafka.core.KafkaTemplate;
+
+
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-
-
-
+import java.util.UUID;
 
 
 @RestController
@@ -30,6 +30,8 @@ public class orderControl {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     // 函数用途：用户添加商品到购物车，接收参数：用户名,书的ID，买的数量
     // 权限要求：登录用户
@@ -106,41 +108,16 @@ public class orderControl {
 
     // 函数功能：下单！
     @RequestMapping("/order/makeorder")
-    public Msg orderMakeFromShopCart(@RequestBody Map<String, String> params) throws Exception {
+    public Msg orderMake(@RequestBody Map<String, String> params) throws Exception {
         int itemNum = (params.size() - 6) / 2 ;
         if(itemNum <= 0)
             return null;
-        // 解析前端的请求数据，6个基本信息+后面的订单信息
-        String orderFrom = params.get("orderFrom");
-        String username = params.get(constant.USERNAME);
-        String receivename = params.get("receivename");
-        String postcode = params.get("postcode");
-        String phonenumber = params.get("phonenumber");
-        String receiveaddress = params.get("receiveaddress");
-        int[] bookIDGroup = new int[itemNum];
-        int[] bookNumGroup = new int[itemNum];
-
-        for(int i=1; i<=itemNum; i++){
-            bookIDGroup[i-1] = Integer.parseInt(params.get("bookIDGroup" + i));
-            bookNumGroup[i-1] = Integer.parseInt(params.get("bookNumGroup" + i));
-        }
-
-        // 根据购买的来源，把数组交给服务层业务函数
-        int result = -1;
-        if(Objects.equals(orderFrom, "ShopCart")) {
-            result = orderService.orderMakeFromShopCart(bookIDGroup,bookNumGroup,username,receivename,
-                    postcode, phonenumber, receiveaddress,itemNum);
-        }
-        else if(Objects.equals(orderFrom, "DirectBuy")){
-            result = orderService.orderMakeFromDirectBuy(bookIDGroup,bookNumGroup,username,receivename,
-                    postcode, phonenumber, receiveaddress,itemNum);
-        }
-
-        // 根据结果返回
-        if(result == 0)
-            return MsgUtil.makeMsg(MsgCode.SUCCESS,MsgUtil.SUCCESS_MSG);
-        else
-            return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.ERROR_MSG);
+        // 创建一个UUID
+        String Order_UUID = UUID.randomUUID().toString().toUpperCase();
+        JSONObject data = new JSONObject();
+        data.put("uuid",Order_UUID);
+        kafkaTemplate.send("orderQueue", Order_UUID, params.toString());
+        return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.SUCCESS_MSG,data);
     }
 
     // 函数用途：管理员获取所有的订单项目的数据
@@ -190,6 +167,6 @@ public class orderControl {
     public JSONArray testFunction(){
         System.out.println("测试开始！！！！！！！！！！");
 
-        return orderService.getAllOrder();
+        return orderService.getUserOrder("user7");
     }
 }

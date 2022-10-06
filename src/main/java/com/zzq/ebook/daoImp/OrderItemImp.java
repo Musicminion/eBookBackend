@@ -60,7 +60,7 @@ public class OrderItemImp implements OrderItemDao {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
-    public OrderItem setOrderItemStatusUsernameAndBookID(String username, int bookID,int status, int OrderID){
+    public OrderItem setOrderItemStatusByUsernameAndBookID(String username, int bookID, int status, int OrderID){
         OrderItem orderItem = orderItemRepository.findUserShopCartItemOfBook(username,bookID);
         orderItem.setStatus(status);
         orderItem.setOrderID(OrderID);

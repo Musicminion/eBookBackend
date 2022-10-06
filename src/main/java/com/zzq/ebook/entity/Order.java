@@ -26,6 +26,9 @@ public class Order {
 
     private int totalprice;
 
+
+    public Order(){}
+
     public Order(String belonguser,Timestamp create_time,String destination, String postalcode,
                  String contactphone, String receivername){
         this.belonguser = belonguser;

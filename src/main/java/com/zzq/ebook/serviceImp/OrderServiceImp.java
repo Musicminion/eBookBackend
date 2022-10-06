@@ -12,6 +12,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,7 +96,7 @@ public class OrderServiceImp implements OrderService {
 
     // 下订单 来自购物车的订单
     // 订单业务逻辑，作为一组事务，提交，出现异常可以回滚，购物车里面可能有多个购买项目，需要逐一处理
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class, isolation = Isolation.READ_COMMITTED)
     public int orderMakeFromShopCart(int [] bookIDGroup, int [] bookNumGroup, String username,
             String receivename, String postcode, String phonenumber, String receiveaddress, int size) throws Exception {
         // Step 0: 准备工作,初始化订单的总金额为0
@@ -111,7 +112,7 @@ public class OrderServiceImp implements OrderService {
         // Step 2 处理订单中的每一个项目：for循环处理
         for (int i = 0; i < size; i++){
             // Step 2-1: 操作orderItemDao，把购物车状态修改为已购买状态:2 ，返回实体获取价格
-            OrderItem oneItem = orderItemDao.setOrderItemStatusUsernameAndBookID(username,bookIDGroup[i],2,orderID);
+            OrderItem oneItem = orderItemDao.setOrderItemStatusByUsernameAndBookID(username,bookIDGroup[i],2,orderID);
             if(oneItem != null){
                 totalMoney += oneItem.getPayprice();
                 // Step 2-2: 操作bookDao，修改相关的数量，扣除购买的库存，增加销量，返回的数据要包括价格，然后把总价加起来
@@ -128,7 +129,7 @@ public class OrderServiceImp implements OrderService {
     }
 
 
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor=Exception.class, isolation = Isolation.READ_COMMITTED)
     public int orderMakeFromDirectBuy(int [] bookIDGroup, int [] bookNumGroup, String username,
         String receiveName, String postcode, String phoneNumber, String receiveAddress, int size) throws Exception {
 
@@ -218,10 +219,10 @@ public class OrderServiceImp implements OrderService {
 
 
     public JSONArray getUserOrder(String username){
-
         JSONArray respData = new JSONArray();
-
         List<Order> allOrder = orderDao.getUserOrder(username);
+
+        System.out.println("################");
 
         for(Order order : allOrder){
             JSONObject obj = JSONObject.fromObject(order);

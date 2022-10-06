@@ -1,9 +1,7 @@
 package com.zzq.ebook.dao;
 
 import com.zzq.ebook.entity.OrderItem;
-import com.zzq.ebook.repository.OrderItemRepository;
 import net.sf.json.JSONArray;
-import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -19,7 +17,7 @@ public interface OrderItemDao {
     List<OrderItem> queryOneUserShopCart(String username);
 
     OrderItem checkUserOrderItemByID(String username, int bookID);
-    OrderItem setOrderItemStatusUsernameAndBookID(String username, int bookID,int status, int OrderID);
+    OrderItem setOrderItemStatusByUsernameAndBookID(String username, int bookID, int status, int OrderID);
 
     OrderItem saveOneOrderItem(OrderItem saveObj);
 
