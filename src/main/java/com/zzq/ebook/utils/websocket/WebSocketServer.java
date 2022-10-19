@@ -60,7 +60,7 @@ public class WebSocketServer {
         }
         SESSIONS.put(userId, session);
         COUNT.incrementAndGet();
-        System.out.println(userId + "上线了，当前在线人数：" + COUNT);
+        System.out.println(userId + "加入Websocket连接，当前在线人数：" + COUNT);
 
     }
 
@@ -68,7 +68,7 @@ public class WebSocketServer {
     public void onClose(@PathParam("userId") String userId) {
         SESSIONS.remove(userId);
         COUNT.decrementAndGet();
-        System.out.println(userId + "下线了，当前在线人数：" + COUNT);
+        System.out.println(userId + "推出Websocket连接，当前在线人数：" + COUNT);
     }
 
     @OnError

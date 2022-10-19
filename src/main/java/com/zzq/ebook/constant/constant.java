@@ -50,11 +50,22 @@ public class constant {
     public static final String PUBLISHER = "publisher";
     public static final String DESCRIPTION = "description";
 
-
-
     // 注册字段的变量
     public static final String LOCATION = "location";
     public static final String PHONE = "phone";
     public static final String CONFIRM = "confirm";
     public static final String AGREEMENT  ="agreement";
+
+
+
+    public static final String WEBSOCKET_MSG_CODE = "websocketCode";
+    public static final int WEBSOCKET_MSG_CODE_Info_Success = 0;
+    public static final int WEBSOCKET_MSG_CODE_Info_Error = 1;
+    public static final int WEBSOCKET_MSG_CODE_PURE_MESSAGE = 100;
+
+    public static final String WEBSOCKET_MSG_Info = "websocketMsgInfo";
+    public static final String OrderDeal_MSG_Success = "订单处理已经完成";
+    public static final String OrderDeal_MSG_ERROR_POST_PARAMETER = "订单处理异常,POST参数错误";
+    public static final String OrderDeal_MSG_ERROR_TRAINSITION = "订单事务出现异常";
+
 }
