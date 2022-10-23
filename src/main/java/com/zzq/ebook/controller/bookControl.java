@@ -29,6 +29,7 @@ import java.util.Objects;
 //      /deleteBook                                 删除一本书，POST
 // ---------------------------------------------------------------------------------------------------------------------
 
+@CrossOrigin(origins = "*")
 @RestController
 public class bookControl {
     @Autowired

@@ -11,6 +11,7 @@ import com.zzq.ebook.utils.session.SessionUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,7 @@ import java.util.UUID;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 public class orderControl {
 
     @Autowired

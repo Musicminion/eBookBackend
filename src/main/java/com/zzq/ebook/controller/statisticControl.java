@@ -12,6 +12,7 @@ import com.zzq.ebook.utils.session.SessionUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,7 @@ import java.util.Objects;
 //  注释：如果没有传入参数，默认统计所有的时间 用户个人数据统计的用户通过session读取
 
 @RestController
+@CrossOrigin(origins = "*")
 public class statisticControl {
 
     @Autowired
