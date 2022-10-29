@@ -1,4 +1,4 @@
-package com.zzq.ebook.interceptor;
+package com.zzq.ebook.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

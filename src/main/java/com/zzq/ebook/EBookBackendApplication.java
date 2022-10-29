@@ -36,9 +36,9 @@ public class EBookBackendApplication {
         Connector connector=new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
         connector.setPort(8080);
-        //Set the secure connection flag that will be assigned to requests received through this connector.
-        //@param secure The new secure connection flag
-        //if connector.setSecure(true),the http use the http and https use the https;
+        // Set the secure connection flag that will be assigned to requests received through this connector.
+        // @param secure The new secure connection flag
+        // if connector.setSecure(true),the http use the http and https use the https;
         // else if connector.setSecure(false),the http redirect to https;
         connector.setSecure(false);
         connector.setRedirectPort(8443);

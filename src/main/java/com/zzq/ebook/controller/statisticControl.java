@@ -196,13 +196,4 @@ public class statisticControl {
             return statisticService.userSelfStatistic_BookWithBuyNum(datastart,dataend,username);
         }
     }
-
-
-
-    @RequestMapping("/statistic/test")
-    public List<Order> test() throws ParseException {
-        return null;
-    }
-
-
 }

@@ -164,11 +164,4 @@ public class orderControl {
         return orderService.getUserOrder(username);
     }
 
-    //  测试的接口函数
-    @RequestMapping("/test")
-    public JSONArray testFunction(){
-        System.out.println("测试开始！！！！！！！！！！");
-
-        return orderService.getUserOrder("user7");
-    }
 }

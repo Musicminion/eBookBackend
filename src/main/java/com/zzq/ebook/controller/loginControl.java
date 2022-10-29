@@ -83,19 +83,4 @@ public class loginControl {
         }
     }
 
-
-
-    @RequestMapping("/test1")
-    public String test1() {
-        return clockService.launchClock();
-    }
-
-    @RequestMapping("/test2")
-    public String test2() {
-        return clockService.endClock();
-    }
-
-
-
-
 }
