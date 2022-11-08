@@ -3,13 +3,17 @@ package com.zzq.ebook.serviceImp;
 import com.zzq.ebook.dao.BookDao;
 import com.zzq.ebook.dao.OrderItemDao;
 import com.zzq.ebook.entity.Book;
+import com.zzq.ebook.entity.ESBook;
 import com.zzq.ebook.service.BookService;
 import com.zzq.ebook.utils.message.Msg;
 import com.zzq.ebook.utils.message.MsgCode;
 import com.zzq.ebook.utils.message.MsgUtil;
+import javassist.compiler.ast.Keyword;
 import net.sf.json.JSONObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
 import com.zzq.ebook.constant.constant;
 
@@ -43,7 +47,7 @@ public class BookServiceImp implements BookService {
         keyword = "%"+ keyword +"%";
         System.out.println(bookDao.findBooksGlobal(keyword));
 
-        // 0-全局搜 1-书籍名搜 2-出版社搜 3-作者搜
+        // 0-全局搜 1-书籍名搜 2-出版社搜 3-作者搜 4-描述搜索
         switch (type){
             case 0:
                 return bookDao.findBooksGlobal(keyword);
@@ -51,9 +55,10 @@ public class BookServiceImp implements BookService {
                 return bookDao.findBooksByDisplaytitleLike(keyword);
             case 2:
                 return bookDao.findBooksByPublisherLike(keyword);
-
             case 3:
                 return bookDao.findBooksByAuthorLike(keyword);
+            case 4:
+                return ESHitsToBook(bookDao.findESBooksByDescription(keyword));
             default:
                 break;
         }
@@ -61,6 +66,36 @@ public class BookServiceImp implements BookService {
         return null;
     }
 
+    public SearchHits<ESBook> getBooksByDescription(String keyword){
+        return bookDao.findESBooksByDescription(keyword);
+    }
+
+
+    private List<Book> ESHitsToBook(SearchHits<ESBook> searchHits){
+        List<Book> books = new ArrayList<>();
+        for (SearchHit<ESBook> hit : searchHits){
+            ESBook esBook = hit.getContent();
+            Book book = new Book();
+            book.setAuthor(esBook.getAuthor());
+            book.setBookname(esBook.getBookname());
+
+            book.setDisplaytitle(esBook.getDisplaytitle());
+            book.setDeparture(esBook.getDeparture());
+
+            book.setDescription(hit.getHighlightField("description").toString());
+
+            book.setInventory(esBook.getInventory());
+            book.setISBN(esBook.getISBN());
+            book.setImgtitle(esBook.getImgtitle());
+
+            book.setSellnumber(esBook.getSellnumber());
+            book.setPrice(esBook.getPrice());
+            book.setID(esBook.getID());
+            book.setPublisher(esBook.getPublisher());
+            books.add(book);
+        }
+        return books;
+    }
 
     public Book addOneBook(JSONObject bookinfo){
         Book newbook = new Book();

@@ -24,6 +24,10 @@ public class Book {
     private String description;
 
 
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
     public int getID() {return ID;}
     public String getISBN() {return ISBN;}
     public String getBookname() {return bookname;}

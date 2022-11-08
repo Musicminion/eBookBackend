@@ -2,6 +2,7 @@ package com.zzq.ebook.controller;
 
 import com.zzq.ebook.constant.constant;
 import com.zzq.ebook.entity.Book;
+import com.zzq.ebook.entity.ESBook;
 import com.zzq.ebook.privateKey.keyInfo;
 import com.zzq.ebook.service.BookService;
 import com.zzq.ebook.utils.message.Msg;
@@ -9,8 +10,8 @@ import com.zzq.ebook.utils.message.MsgCode;
 import com.zzq.ebook.utils.message.MsgUtil;
 import com.zzq.ebook.utils.session.SessionUtil;
 import net.sf.json.JSONObject;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,6 +64,16 @@ public class bookControl {
                                   @PathVariable("keyword") String keyword){
         return bookService.getSearchedBooks(type,keyword);
     }
+
+
+//    @GetMapping(value = "/queryBooksDescriptionSearch/{keyword}")
+//    public SearchHits<ESBook> searchBooksByDescription(
+//            @PathVariable("keyword") String keyword){
+//        System.out.println("#####################");
+//
+//        return bookService.getBooksByDescription(keyword);
+//    }
+
 
     @RequestMapping("/queryBook/All")
     public List<Book> getAllBook(@RequestBody Map<String, String> params){

@@ -1,5 +1,7 @@
 package com.zzq.ebook.dao;
 import com.zzq.ebook.entity.Book;
+import com.zzq.ebook.entity.ESBook;
+import org.springframework.data.elasticsearch.core.SearchHits;
 
 import java.util.List;
 
@@ -16,5 +18,7 @@ public interface BookDao {
     void deleteOneBookByID(Integer id);
     Book saveOneBook(Book newoneBook);
     List<Book> saveAllBooks(List<Book> allBooks);
+
+    SearchHits<ESBook> findESBooksByDescription(String keyword);
 
 }
