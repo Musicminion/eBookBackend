@@ -9,7 +9,7 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 
 /**
  * ElasticSearch 客户端配置
- *
+ * @Author张子谦
  */
 @Configuration
 public class RestClientConfig extends AbstractElasticsearchConfiguration {

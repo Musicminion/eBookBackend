@@ -7,6 +7,13 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+// 整个实体类参考Book，但是为了避免混淆、适应ES的搜索引擎，所以我单独建立了一个实体
+// 考虑到整个搜索中分词器的特性，我们需要在建立索引的时候使用ik_max_word分词器，
+// 这个分词器的特性会把：例如会将文本做最细粒度的拆分，比如会将“中华人民共和国人民大会堂”
+// 拆分为“中华人民共和国、中华人民、中华、华人、人民共和国、人民、共和国、大会堂、大会、会堂等词语。
+// 索引时用ik_max_word，这样会把词组的划分最大化，
+// 但是在搜索时用ik_smart，尽可能的匹配最大化。这也是对应我的Description的内容。
+
 @Data
 @Document(indexName = "book")
 public class ESBook {

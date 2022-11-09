@@ -55,7 +55,6 @@ public class bookControl {
         return bookService.getRecommendBooks();
     }
 
-
     // 函数用途：按照条件查询书籍，具体种类参考函数内容，GET请求
     // 使用场景：搜索书籍，其中第一个参数是搜索的方法，第二个是关键字
     // 权限要求：无限制
@@ -64,16 +63,6 @@ public class bookControl {
                                   @PathVariable("keyword") String keyword){
         return bookService.getSearchedBooks(type,keyword);
     }
-
-
-//    @GetMapping(value = "/queryBooksDescriptionSearch/{keyword}")
-//    public SearchHits<ESBook> searchBooksByDescription(
-//            @PathVariable("keyword") String keyword){
-//        System.out.println("#####################");
-//
-//        return bookService.getBooksByDescription(keyword);
-//    }
-
 
     @RequestMapping("/queryBook/All")
     public List<Book> getAllBook(@RequestBody Map<String, String> params){
