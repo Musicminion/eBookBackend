@@ -8,7 +8,8 @@ import com.zzq.ebook.service.BookService;
 import com.zzq.ebook.utils.message.Msg;
 import com.zzq.ebook.utils.message.MsgCode;
 import com.zzq.ebook.utils.message.MsgUtil;
-import javassist.compiler.ast.Keyword;
+
+import com.zzq.ebook.utils.tool.ToolFunction;
 import net.sf.json.JSONObject;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +59,10 @@ public class BookServiceImp implements BookService {
             case 3:
                 return bookDao.findBooksByAuthorLike(keyword);
             case 4:
-                return ESHitsToBook(bookDao.findESBooksByDescription(keyword));
+                return ToolFunction.ESHitsToBook(bookDao.findESBooksByDescription(keyword));
             default:
                 break;
         }
-
         return null;
     }
 
@@ -71,74 +71,38 @@ public class BookServiceImp implements BookService {
     }
 
 
-    private List<Book> ESHitsToBook(SearchHits<ESBook> searchHits){
-        List<Book> books = new ArrayList<>();
-        for (SearchHit<ESBook> hit : searchHits){
-            ESBook esBook = hit.getContent();
-            Book book = new Book();
-            book.setAuthor(esBook.getAuthor());
-            book.setBookname(esBook.getBookname());
-
-            book.setDisplaytitle(esBook.getDisplaytitle());
-            book.setDeparture(esBook.getDeparture());
-
-            book.setDescription(hit.getHighlightField("description").toString());
-
-            book.setInventory(esBook.getInventory());
-            book.setISBN(esBook.getISBN());
-            book.setImgtitle(esBook.getImgtitle());
-
-            book.setSellnumber(esBook.getSellnumber());
-            book.setPrice(esBook.getPrice());
-            book.setID(esBook.getID());
-            book.setPublisher(esBook.getPublisher());
-            books.add(book);
-        }
-        return books;
-    }
-
-    public Book addOneBook(JSONObject bookinfo){
-        Book newbook = new Book();
-        newbook.setInventory(Integer.parseInt(bookinfo.getString(constant.INVENTORY)));
-        newbook.setSellnumber(0);
-        newbook.setAuthor(bookinfo.getString(constant.AUTHOR));
-        newbook.setBookname(bookinfo.getString(constant.BOOKNAME));
-        newbook.setDeparture(bookinfo.getString(constant.DEPARTURE));
-        newbook.setDisplaytitle(bookinfo.getString(constant.DISPLAYTITLE));
-        newbook.setPublisher(bookinfo.getString(constant.PUBLISHER));
-        newbook.setDescription(bookinfo.getString(constant.DESCRIPTION));
-        newbook.setISBN(bookinfo.getString(constant.ISBN));
-        newbook.setImgtitle(bookinfo.getString(constant.IMGTITLE));
-        double tmpPrice = Double.parseDouble(bookinfo.getString(constant.PRICE));
+    public Book addOneBook(JSONObject bookInfo){
+        Book newBook = new Book();
+        newBook.setInventory(Integer.parseInt(bookInfo.getString(constant.INVENTORY)));
+        newBook.setSellnumber(0);
+        newBook = bookInfoParser(newBook,bookInfo);
+        newBook.setImgtitle(bookInfo.getString(constant.IMGTITLE));
+        double tmpPrice = Double.parseDouble(bookInfo.getString(constant.PRICE));
         tmpPrice = tmpPrice * 100;
         int price = (int) tmpPrice;
-        newbook.setPrice(price);
+        newBook.setPrice(price);
 
-        return bookDao.saveOneBook(newbook);
+        return bookDao.saveOneBook(newBook);
     }
 
 
-    public Book editOneBook(JSONObject bookinfo){
-        int bookID = Integer.parseInt(bookinfo.getString(constant.BOOKID));
+
+    public Book editOneBook(JSONObject bookInfo){
+        int bookID = Integer.parseInt(bookInfo.getString(constant.BOOKID));
         Book targetBook = bookDao.getOneBookByID(bookID);
 
         if(targetBook==null)
             return null;
         else{
-            targetBook.setInventory(Integer.parseInt(bookinfo.getString(constant.INVENTORY)));
-            targetBook.setAuthor(bookinfo.getString(constant.AUTHOR));
-            targetBook.setBookname(bookinfo.getString(constant.BOOKNAME));
-            targetBook.setDeparture(bookinfo.getString(constant.DEPARTURE));
-            targetBook.setDisplaytitle(bookinfo.getString(constant.DISPLAYTITLE));
-            targetBook.setPublisher(bookinfo.getString(constant.PUBLISHER));
-            targetBook.setDescription(bookinfo.getString(constant.DESCRIPTION));
-            targetBook.setISBN(bookinfo.getString(constant.ISBN));
+            targetBook.setInventory(Integer.parseInt(bookInfo.getString(constant.INVENTORY)));
+            targetBook = bookInfoParser(targetBook,bookInfo);
+
             // 编辑书信息的时候，如果没有修改图片的信息，那么这个值就是nochange，反之，就说明改了，就要把新的URL写入
-            if(!Objects.equals(bookinfo.getString(constant.IMGTITLE), "nochange")){
-                targetBook.setImgtitle(bookinfo.getString(constant.IMGTITLE));
+            if(!Objects.equals(bookInfo.getString(constant.IMGTITLE), "nochange")){
+                targetBook.setImgtitle(bookInfo.getString(constant.IMGTITLE));
             }
 
-            double tmpPrice = Double.parseDouble(bookinfo.getString(constant.PRICE));
+            double tmpPrice = Double.parseDouble(bookInfo.getString(constant.PRICE));
             tmpPrice = tmpPrice * 100;
             int price = (int) tmpPrice;
             targetBook.setPrice(price);
@@ -146,6 +110,19 @@ public class BookServiceImp implements BookService {
             return bookDao.saveOneBook(targetBook);
         }
     }
+
+    // 一个解析器，把相同的代码提取出来
+    public Book bookInfoParser(Book targetBook,JSONObject bookInfo){
+        targetBook.setAuthor(bookInfo.getString(constant.AUTHOR));
+        targetBook.setBookname(bookInfo.getString(constant.BOOKNAME));
+        targetBook.setDeparture(bookInfo.getString(constant.DEPARTURE));
+        targetBook.setDisplaytitle(bookInfo.getString(constant.DISPLAYTITLE));
+        targetBook.setPublisher(bookInfo.getString(constant.PUBLISHER));
+        targetBook.setDescription(bookInfo.getString(constant.DESCRIPTION));
+        targetBook.setISBN(bookInfo.getString(constant.ISBN));
+        return targetBook;
+    }
+
 
     public int deleteOneBook(Integer bookid){
         // 如果这个数有订单的话，不能运行删除 返回-1

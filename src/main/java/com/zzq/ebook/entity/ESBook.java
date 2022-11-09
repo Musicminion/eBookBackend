@@ -21,22 +21,30 @@ public class ESBook {
     @Field(type = FieldType.Integer)
     private int ID;
 
-    @Field(analyzer = "ik_max_word")
+    @Field(type = FieldType.Text)
     private String ISBN;
 
     @Field(type = FieldType.Text,index = false)
     private String bookname;
 
-    @Field(analyzer = "ik_max_word")
+    @Field(type = FieldType.Text,analyzer = "ik_max_word")
     private String displaytitle;
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
     @Field(type = FieldType.Integer,index = false)
     private int inventory;
 
-    @Field(analyzer = "ik_max_word")
+    @Field(analyzer = "ik_max_word",type = FieldType.Text)
     private String departure;
 
-    @Field(analyzer = "ik_max_word")
+    @Field(analyzer = "ik_max_word",type = FieldType.Text)
     private String author;
 
     @Field(type = FieldType.Integer,index = false)
@@ -48,9 +56,25 @@ public class ESBook {
     @Field(type = FieldType.Text,index = false)
     private String imgtitle;
 
-    @Field(analyzer = "ik_max_word")
+    @Field(analyzer = "ik_max_word",type = FieldType.Text)
     private String publisher;
 
-    @Field(analyzer = "ik_smart", searchAnalyzer = "ik_max_word")
+    @Field(analyzer = "ik_smart", searchAnalyzer = "ik_max_word",type = FieldType.Text)
     private String description;
+
+    public ESBook(){}
+    public ESBook(Book book){
+        this.ID = book.getID();
+        this.ISBN = book.getISBN();
+        this.bookname = book.getBookname();
+        this.displaytitle = book.getDisplaytitle();
+        this.inventory = book.getInventory();
+        this.departure = book.getDeparture();
+        this.author = book.getAuthor();
+        this.price = book.getPrice();
+        this.sellnumber = book.getSellnumber();
+        this.imgtitle = book.getImgtitle();
+        this.publisher = book.getPublisher();
+        this.description = book.getDescription();
+    }
 }

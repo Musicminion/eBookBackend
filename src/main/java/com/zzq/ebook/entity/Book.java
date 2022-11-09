@@ -23,7 +23,6 @@ public class Book {
     private String publisher;
     private String description;
 
-
     public void setID(int ID) {
         this.ID = ID;
     }
@@ -94,4 +93,20 @@ public class Book {
     }
 
     //    public void setID(int ID) { this.ID = ID; }
+
+    public Book(){}
+    public Book(ESBook esBook){
+        this.ID = esBook.getID();
+        this.ISBN = esBook.getISBN();
+        this.bookname = esBook.getBookname();
+        this.displaytitle = esBook.getDisplaytitle();
+        this.inventory = esBook.getInventory();
+        this.departure = esBook.getDeparture();
+        this.author = esBook.getAuthor();
+        this.price = esBook.getPrice();
+        this.sellnumber = esBook.getSellnumber();
+        this.imgtitle = esBook.getImgtitle();
+        this.publisher = esBook.getPublisher();
+        this.description = esBook.getDescription();
+    }
 }
