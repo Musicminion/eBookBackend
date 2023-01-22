@@ -1,4 +1,4 @@
-# eBookBackend 互联网应用开发基础 课程大作业后端工程
+# eBookBackend  课程大作业后端工程
 
 给我狠狠地优雅！！！
 
@@ -9,7 +9,6 @@
 2. 数据库 [看我的Github 互联网开发的仓库包括所有静态资源、SQL文件]
 3. Redis
 4. ElasticSearch 7.17.6搭配分词器lk 7.17.6（配件plugin文件）
-5. 
 
 ### Kafka
 需要下载Kafka，参考这里：https://kafka.apache.org/quickstart
@@ -53,8 +52,23 @@ bin/elasticsearch
 
 ### 重要版本依赖说明
 - 2022.11.9：进行了Spring底层框架的更新：
-  - SpringBoot更新使用2.7版本
-  - ElasticSearch使用7.17.6版本（该版本支持Windows/Linux/Arm Mac/Intel Mac）
-  - 依赖Spring Data Elasticsearch使用4.4.5版本
-  - **以上内容如有任何的版本不一致都可能导致项目启动失败！**
-  - 测试机环境：MacOS Venture13.0 Arm64 CPU
+    - SpringBoot更新使用2.7版本
+    - ElasticSearch使用7.17.6版本（该版本支持Windows/Linux/Arm Mac/Intel Mac）
+    - 依赖Spring Data Elasticsearch使用4.4.5版本
+    - **以上内容如有任何的版本不一致都可能导致项目启动失败！**
+    - 测试机环境：MacOS Venture13.0 Arm64 CPU
+
+
+### 本机核弹启动快捷脚本
+需要目录一致才可以！
+```bash
+# kafka
+/Applications/kafka_2.13-3.3.1/bin/zookeeper-server-start.sh /Applications/kafka_2.13-3.3.1/config/zookeeper.properties &
+/Applications/kafka_2.13-3.3.1/bin/kafka-server-start.sh /Applications/kafka_2.13-3.3.1/config/server.properties &
+
+# search elasticsearch
+/Applications/elasticsearch-7.17.6/bin/elasticsearch &
+
+# redis
+brew services start redis
+```
