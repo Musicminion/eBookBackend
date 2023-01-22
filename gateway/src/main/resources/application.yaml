@@ -1,0 +1,26 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+  application:
+    name: gateway
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: localhost
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:8040/eureka
+    eureka-service-url-poll-interval-seconds: 10
