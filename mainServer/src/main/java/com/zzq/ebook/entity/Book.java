@@ -23,6 +23,12 @@ public class Book {
     private String publisher;
     private String description;
 
+    private String tag;
+
+    public void setTag(String tag){this.tag = tag;}
+
+    public String getTag(){return this.tag;}
+
     public void setID(int ID) {
         this.ID = ID;
     }

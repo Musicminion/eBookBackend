@@ -1,5 +1,7 @@
 package com.zzq.ebook.controller;
 
+import com.zzq.ebook.entity.Book;
+import com.zzq.ebook.entity.UserIcon;
 import net.sf.json.JSONObject;
 import com.zzq.ebook.constant.constant;
 import com.zzq.ebook.entity.User;
@@ -10,10 +12,7 @@ import com.zzq.ebook.utils.message.MsgUtil;
 import com.zzq.ebook.utils.session.SessionUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -149,5 +148,20 @@ public class userControl {
         }
         else
             return MsgUtil.makeMsg(MsgCode.ERROR,MsgUtil.SET_LOGIN_PERMISSION_FAIL);
+    }
+
+
+    @GetMapping(value = "/user/getUserIcon/{username}")
+    public Msg getUserIcon(@PathVariable("username") String username){
+        System.out.println(username);
+        UserIcon userIcon = userService.getUserIconByUsername(username);
+        if(userIcon!=null) {
+            JSONObject obj = new JSONObject();
+            obj.put("base64Img",userIcon.getIconBase64());
+            return MsgUtil.makeMsg(MsgCode.SUCCESS, MsgUtil.SUCCESS_MSG, obj);
+        }
+        else {
+            return MsgUtil.makeMsg(MsgCode.ERROR);
+        }
     }
 }

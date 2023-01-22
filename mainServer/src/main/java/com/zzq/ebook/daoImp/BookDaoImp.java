@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zzq.ebook.dao.BookDao;
 import com.zzq.ebook.entity.Book;
+import com.zzq.ebook.entity.BookType;
 import com.zzq.ebook.entity.ESBook;
 import com.zzq.ebook.repository.BookRepository;
+import com.zzq.ebook.repository.BookTypeRepository;
 import com.zzq.ebook.repository.ESBookRepository;
 import com.zzq.ebook.utils.redis.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class BookDaoImp implements BookDao {
@@ -28,6 +32,10 @@ public class BookDaoImp implements BookDao {
 
     @Autowired
     private ESBookRepository esBookRepository;
+
+
+    @Autowired
+    private BookTypeRepository bookTypeRepository;
 
 
     /**
@@ -182,5 +190,49 @@ public class BookDaoImp implements BookDao {
         return bookRepository.findBooksByAuthorLikeOrPublisherLikeOrDisplaytitleLike(
             keyword,keyword,keyword
         );
+    }
+    @Override
+    public List<Book> findBooksByTagRelation(String tagName){
+        List<BookType> list0 = bookTypeRepository.findBookTypesByTypeNameLike(tagName);
+        HashMap<Integer, Integer> result = new HashMap<>();
+        List<Book> resultBook = new ArrayList<>();
+
+        System.out.println(list0.size());
+        System.out.println(list0);
+
+        for (BookType bookType : list0) {
+            for (int j = 0; j < bookType.getBookIDs().size(); j++) {
+                int id = bookType.getBookIDs().get(j);
+                result.put(id, 1);
+            }
+        }
+
+        for (BookType type : list0) {
+            String keyName = type.getTypeName();
+            List<BookType> list1 = bookTypeRepository.findNodeRelatedBookTypesDistance1(keyName);
+            List<BookType> list2 = bookTypeRepository.findNodeRelatedBookTypesDistance2(keyName);
+
+            for (BookType bookType : list1) {
+                for (int j = 0; j < bookType.getBookIDs().size(); j++) {
+                    int id = bookType.getBookIDs().get(j);
+                    result.put(id, 1);
+                }
+            }
+
+            for (BookType bookType : list2) {
+                for (int j = 0; j < bookType.getBookIDs().size(); j++) {
+                    int id = bookType.getBookIDs().get(j);
+                    result.put(id, 1);
+                }
+            }
+        }
+
+
+
+        for(int id: result.keySet()){
+            resultBook.add(this.getOneBookByID(id));
+        }
+
+        return resultBook;
     }
 }

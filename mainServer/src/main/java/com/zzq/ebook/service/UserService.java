@@ -1,6 +1,7 @@
 package com.zzq.ebook.service;
 
 import com.zzq.ebook.entity.User;
+import com.zzq.ebook.entity.UserIcon;
 import com.zzq.ebook.utils.message.Msg;
 
 import java.util.List;
@@ -27,4 +28,7 @@ public interface UserService {
     public List<User> getAllUser();
 
     public boolean setUserLoginPermit(String setObjUser, int setObjState);
+
+
+    public UserIcon getUserIconByUsername(String username);
 }

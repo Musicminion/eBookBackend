@@ -1,6 +1,7 @@
 package com.zzq.ebook.serviceImp;
 
 import com.zzq.ebook.constant.constant;
+import com.zzq.ebook.entity.UserIcon;
 import com.zzq.ebook.utils.message.MsgCode;
 import com.zzq.ebook.utils.message.MsgUtil;
 import com.zzq.ebook.utils.message.Msg;
@@ -41,6 +42,7 @@ public class UserServiceImp implements UserService {
             obj.put(constant.PRIVILEGE, user.getPrivilege());
             SessionUtil.setSession(obj);
 
+            user.setUserIcon(new UserIcon(username,"none"));
             JSONObject data = JSONObject.fromObject(user);
             data.remove(constant.PASSWORD);
             data.remove("childOrderItem");
@@ -55,12 +57,12 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User getUserByusername(String username){
-        return userDao.getUserByusername(username);
+        return userDao.getUserByUsername(username);
     }
 
     @Override
     public boolean checkUserIfExist(String username){
-        User user = userDao.getUserByusername(username);
+        User user = userDao.getUserByUsername(username);
         return user != null;
     }
 
@@ -71,7 +73,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public boolean  setUserLoginPermit(String setObjUser, int setObjState){
-        User user = userDao.getUserByusername(setObjUser);
+        User user = userDao.getUserByUsername(setObjUser);
         if(user != null){
             user.setForbidlogin(setObjState);
             userDao.saveOneUser(user);
@@ -86,7 +88,7 @@ public class UserServiceImp implements UserService {
     public int registerUser(String email,String location,String password,String phone,
                             String username, String confirm,String agreement){
         // 为了安全，后端再检查一下用户名有没有重复，重复了的话，就返回错误
-        if(userDao.getUserByusername(username) != null)
+        if(userDao.getUserByUsername(username) != null)
             return -1;
         if(!Objects.equals(password, confirm))
             return -2;
@@ -106,5 +108,10 @@ public class UserServiceImp implements UserService {
 
         userDao.saveOneUser(newUser);
         return 0;
+    }
+
+    public UserIcon getUserIconByUsername(String username){
+
+        return userDao.getUserIconByUsername(username);
     }
 }

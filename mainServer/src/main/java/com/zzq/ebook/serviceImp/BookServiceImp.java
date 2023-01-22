@@ -45,21 +45,23 @@ public class BookServiceImp implements BookService {
         return bookDao.getTopSellBooks(15);
     }
     public List<Book> getSearchedBooks(int type, String keyword){
-        keyword = "%"+ keyword +"%";
+        String searchKeyword = "%"+ keyword +"%";
         System.out.println(bookDao.findBooksGlobal(keyword));
 
         // 0-全局搜 1-书籍名搜 2-出版社搜 3-作者搜 4-描述搜索
         switch (type){
             case 0:
-                return bookDao.findBooksGlobal(keyword);
+                return bookDao.findBooksGlobal(searchKeyword);
             case 1:
-                return bookDao.findBooksByDisplaytitleLike(keyword);
+                return bookDao.findBooksByDisplaytitleLike(searchKeyword);
             case 2:
-                return bookDao.findBooksByPublisherLike(keyword);
+                return bookDao.findBooksByPublisherLike(searchKeyword);
             case 3:
-                return bookDao.findBooksByAuthorLike(keyword);
+                return bookDao.findBooksByAuthorLike(searchKeyword);
             case 4:
-                return ToolFunction.ESHitsToBook(bookDao.findESBooksByDescription(keyword));
+                return ToolFunction.ESHitsToBook(bookDao.findESBooksByDescription(searchKeyword));
+            case 5:
+                return bookDao.findBooksByTagRelation(keyword);
             default:
                 break;
         }

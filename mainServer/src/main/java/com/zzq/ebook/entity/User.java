@@ -1,10 +1,8 @@
 package com.zzq.ebook.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
+import com.zzq.ebook.entity.UserIcon;
+import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,6 +21,7 @@ public class User {
 
     private String telephone;
     private int forbidlogin;
+
 
     public String getUsername(){
         return this.username;
@@ -83,5 +82,17 @@ public class User {
         this.childOrderItem = childOrderItem;
     }
 
+
+
+    @Transient
+    private UserIcon userIcon;
+    @Transient
+    public UserIcon getUserIcon() {
+        return userIcon;
+    }
+    @Transient
+    public void setUserIcon(UserIcon userIcon) {
+        this.userIcon = userIcon;
+    }
 }
 
